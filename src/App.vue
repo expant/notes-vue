@@ -3,7 +3,6 @@ export default {
   data() {
     return {
       inputValue: '',
-      noteId: 0,
       notes: [],
     }
   },
@@ -11,24 +10,37 @@ export default {
     inputChangeHandler(event) {
       this.inputValue = event.target.value;
     },
-    addNewNote(event) {
+    addNewNote() {
       if (!this.inputValue) {
         return;
       }
       this.notes.push({
-        id: this.noteId,
         value: this.inputValue,
+        isActiveNoteRename: false,
       });
       this.inputValue = '';
-      this.noteId += 1;
+      
     },
-    deleteNote(id) {
-      this.notes = this.notes.filter((note) => id !== note.id);
+    removeNote(idx) {
+      this.notes.splice(idx, 1);
+    },
+    activeRenameInput(idx, event) {
+      this.notes[idx].isActiveNoteRename = true;
+      console.log(this.$refs);
+    },
+    renameNote(idx, event) {
+      const val = event.target.value;
+      this.notes[idx].isActiveNoteRename = false;
+      if (val === '') {
+        return;
+      }
+      this.notes[idx].value = val;
     }
   }
 };
 </script>
 
+// TODO: Реализовать редактирование заметок 
 <template>
   <h1>Список заметок</h1>
   <form 
@@ -40,18 +52,35 @@ export default {
       class="add-note-input"
       type="text" 
       placeholder="Добавить заметку"
-      :value="inputValue"
-      @input="inputChangeHandler"
+      v-model="inputValue"
     >
     <button class="add-note-btn" role="button">Добавить</button>
   </form> 
-    
-  <ul class="notes">
-    <li :data-id="note.id" v-for="note in notes">
-      <span class="note-text">{{ note.value }}</span>
-      <button class="note-delete" @click="() => deleteNote(note.id)">Удалить</button>
-    </li>
-  </ul>
+  <div class="notes-not-empty" v-if="notes.length !== 0">
+    <div class="notes-count">Кол-во заметок: {{ notes.length }}</div>
+    <ul class="notes">
+      <li v-for="(note, idx) in notes">
+        <span 
+          class="note-text" 
+          v-if="!note.isActiveNoteRename" 
+          @click="activeRenameInput(idx, $event)"
+        >
+          {{ note.value }}
+        </span>
+        <input
+          class="note-text-input" 
+          v-else 
+          @blur="renameNote(idx, $event)"
+          @keypress.enter="renameNote(idx, $event)"
+          ref="renameInput"
+          type="text"
+          :value="note.value"
+        >
+        <button class="note-delete" @click="removeNote(idx)">Удалить</button>
+      </li>
+    </ul>
+  </div>
+  <div class="notes-empty" v-else>Заметок нет</div>
 </template>
 
 <style scoped>
@@ -114,6 +143,11 @@ export default {
   transform: translateY(-1px);
 }
 
+.notes-count {
+  margin-bottom: 10px;
+  color: #4DB6AC;
+}
+
 .notes {
   list-style-type: none;
 }
@@ -130,6 +164,10 @@ export default {
 
 .note-delete {
   padding: 0px 15px;
+}
+
+.notes-empty {
+  color: #4DB6AC;
 }
 
 </style>
