@@ -1,46 +1,3 @@
-<script>
-export default {
-  data() {
-    return {
-      inputValue: '',
-      notes: [],
-    }
-  },
-  methods: {
-    inputChangeHandler(event) {
-      this.inputValue = event.target.value;
-    },
-    addNewNote() {
-      if (!this.inputValue) {
-        return;
-      }
-      this.notes.push({
-        value: this.inputValue,
-        isActiveNoteRename: false,
-      });
-      this.inputValue = '';
-      
-    },
-    removeNote(idx) {
-      this.notes.splice(idx, 1);
-    },
-    activeRenameInput(idx, event) {
-      this.notes[idx].isActiveNoteRename = true;
-      console.log(this.$refs);
-    },
-    renameNote(idx, event) {
-      const val = event.target.value;
-      this.notes[idx].isActiveNoteRename = false;
-      if (val === '') {
-        return;
-      }
-      this.notes[idx].value = val;
-    }
-  }
-};
-</script>
-
-// TODO: Реализовать редактирование заметок 
 <template>
   <h1>Список заметок</h1>
   <form 
@@ -59,29 +16,71 @@ export default {
   <div class="notes-not-empty" v-if="notes.length !== 0">
     <div class="notes-count">Кол-во заметок: {{ notes.length }}</div>
     <ul class="notes">
-      <li v-for="(note, idx) in notes">
-        <span 
-          class="note-text" 
-          v-if="!note.isActiveNoteRename" 
-          @click="activeRenameInput(idx, $event)"
-        >
-          {{ note.value }}
-        </span>
-        <input
-          class="note-text-input" 
-          v-else 
-          @blur="renameNote(idx, $event)"
-          @keypress.enter="renameNote(idx, $event)"
-          ref="renameInput"
-          type="text"
-          :value="note.value"
-        >
-        <button class="note-delete" @click="removeNote(idx)">Удалить</button>
-      </li>
+      <NoteItem
+        v-for="note in notes"
+        :key="note.id"
+        :title="note.title"
+        :id="note.id"
+        :is-editing="note.isEditing"
+        @remove-note="removeNote"
+        @activate-editing="activateEditing"
+        @edit-note="editNote"
+      />
     </ul>
   </div>
   <div class="notes-empty" v-else>Заметок нет</div>
 </template>
+
+<script>
+import NoteItem from './components/NoteItem.vue';
+
+export default {
+  data() {
+    return {
+      inputValue: '',
+      notes: [],
+      firstId: 0,
+    }
+  },
+  methods: {
+    inputChangeHandler(event) {
+      this.inputValue = event.target.value;
+    },
+    addNewNote() {
+      if (!this.inputValue.trim()) {
+        return;
+      }
+      this.notes.push({
+        title: this.inputValue,
+        id: this.firstId,
+        isEditing: false,
+      });
+      this.inputValue = '';
+      this.firstId += 1;
+    },
+    removeNote(id) {
+      this.notes = this.notes.filter((note) => note.id !== id);
+    },
+    activateEditing(id) {
+      // refs.inputForEditing.focus();
+      this.notes = this.notes.map((note) => {
+        if (note.id !== id) return note;
+        return { ...note, isEditing: true };
+      });
+    },
+    editNote(id, title) {
+      this.notes = this.notes.map((note) => {
+        if (note.id !== id) return note;
+        if (!title) return { ...note, isEditing: false };
+        return { id, title, isEditing: false };
+      });
+    }
+  },
+  components: {
+    NoteItem
+  }
+};
+</script>
 
 <style scoped>
 .creating-notes-form {
@@ -103,8 +102,7 @@ export default {
   outline: 0;
 }
 
-.add-note-btn,
-.note-delete {
+.add-note-btn {
   align-items: center;
   background-clip: padding-box;
   background-color: #fa6400;
@@ -160,10 +158,6 @@ export default {
   padding: 10px 20px;
   border: 1px solid #fb8332;
   border-radius: 5px;
-}
-
-.note-delete {
-  padding: 0px 15px;
 }
 
 .notes-empty {
