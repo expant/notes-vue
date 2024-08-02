@@ -3,10 +3,11 @@
     <span 
       class="note-text" 
       v-if="!isEditing" 
-      @click="activateEditing(id)"
+      @click="$emit('activate-editing', id);"
     >
       {{ title }}
     </span>
+    <!-- TODO: фокусировка на input -->
     <input
       class="note-text-input" 
       v-else 
@@ -22,6 +23,7 @@
 
 <script>
 export default {
+  emits: ['activate-editing', 'edit-note', 'remove-note'],
   props: {
     title: String,
     id: Number,
@@ -32,16 +34,7 @@ export default {
       const title = event.target.value.trim();
       this.$emit('edit-note', id, title);
     },
-    activateEditing(id) {
-      this.$emit('activate-editing', id);
-    },
   },
-  mounted() {
-    if (this.$refs.inputForEditing) {
-      this.$refs.inputForEditing.focus();
-    }
-    
-  }
 }
 </script>
 

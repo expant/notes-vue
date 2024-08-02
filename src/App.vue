@@ -62,7 +62,6 @@ export default {
       this.notes = this.notes.filter((note) => note.id !== id);
     },
     activateEditing(id) {
-      // refs.inputForEditing.focus();
       this.notes = this.notes.map((note) => {
         if (note.id !== id) return note;
         return { ...note, isEditing: true };
