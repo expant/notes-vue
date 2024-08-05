@@ -1,21 +1,22 @@
 <template>
-  <h1>Список заметок</h1>
+  <h1 class="notes__title">Список заметок</h1>
   <form 
-    class="creating-notes-form"
+    class="notes__form"
     action="#" 
     @submit.prevent="addNewNote"
   >
     <input 
-      class="add-note-input"
+      class="form__title"
       type="text" 
       placeholder="Добавить заметку"
       v-model="inputValue"
     >
-    <button class="add-note-btn" role="button">Добавить</button>
+    <textarea class="form__description" name="description" id="description"></textarea>
+    <button class="form__btn" role="button">Добавить</button>
   </form> 
-  <div class="notes-not-empty" v-if="notes.length !== 0">
-    <div class="notes-count">Кол-во заметок: {{ notes.length }}</div>
-    <ul class="notes">
+  <div class="notes__main" v-if="notes.length !== 0">
+    <div class="count">Кол-во заметок: {{ notes.length }}</div>
+    <ul class="items">
       <NoteItem
         v-for="note in notes"
         :key="note.id"
@@ -28,7 +29,14 @@
       />
     </ul>
   </div>
-  <div class="notes-empty" v-else>Заметок нет</div>
+  <div class="notes__empty" v-else>Заметок нет</div>
+  <!-- <div
+    class="form__description"
+    @click="showDescription(id, $event)"
+    v-if=""
+  >
+    
+  </div> -->
 </template>
 
 <script>
@@ -50,6 +58,9 @@ export default {
       if (!this.inputValue.trim()) {
         return;
       }
+      // const description = {
+      //   text: 
+      // }
       this.notes.push({
         title: this.inputValue,
         id: this.firstId,
@@ -82,14 +93,14 @@ export default {
 </script>
 
 <style scoped>
-.creating-notes-form {
+.notes__form {
   margin: 30px 0;
   display: flex;
   justify-content: flex-start;
   gap: 10px;
 }
 
-.add-note-input {
+.form__title {
   font-size: 16px;
   flex: 0 1 315px;
   padding: 5px 5px;
@@ -97,11 +108,15 @@ export default {
   border-bottom: 1px solid #fa6400;
 }
 
-.add-note-input:focus {
+.form__title:focus {
   outline: 0;
 }
 
-.add-note-btn {
+.form__description {
+  height: auto;
+}
+
+.form__btn {
   align-items: center;
   background-clip: padding-box;
   background-color: #fa6400;
@@ -130,26 +145,26 @@ export default {
   width: auto;
 }
 
-.add-note-btn:hover,
-.add-note-btn:focus {
+.form__btn:hover,
+.form__btn:focus {
   background-color: #fb8332;
   box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
 }
 
-.add-note-btn:hover {
+.form__btn:hover {
   transform: translateY(-1px);
 }
 
-.notes-count {
+.count {
   margin-bottom: 10px;
   color: #4DB6AC;
 }
 
-.notes {
+.items {
   list-style-type: none;
 }
 
-.notes li {
+.items li {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -159,7 +174,7 @@ export default {
   border-radius: 5px;
 }
 
-.notes-empty {
+.notes__empty {
   color: #4DB6AC;
 }
 

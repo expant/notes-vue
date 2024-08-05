@@ -1,9 +1,9 @@
 <template>
-  <li>
+  <li @click="showDescription(id, $event)">
     <span 
       class="note-text" 
       v-if="!isEditing" 
-      @click="$emit('activate-editing', id);"
+      @click.stop="$emit('activate-editing', id);"
     >
       {{ title }}
     </span>
@@ -17,7 +17,7 @@
       type="text"
       :value="title"
     >
-    <button class="note-delete" @click="$emit('remove-note', id)">Удалить</button>
+    <button class="note-delete" @click.stop="$emit('remove-note', id)">Удалить</button>
   </li>
 </template>
 
@@ -34,6 +34,9 @@ export default {
       const title = event.target.value.trim();
       this.$emit('edit-note', id, title);
     },
+    showDescription(id, event) {
+      
+    }
   },
 }
 </script>
