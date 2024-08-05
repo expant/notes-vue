@@ -1,5 +1,23 @@
 <template>
-  <h1 class="notes__title">Список заметок</h1>
+  <div class="container">
+    <div class="side-bar">
+      <h1 class="side-bar__title">Список заметок</h1>
+      <div class="line"></div>
+      <div class="side-bar__add-note">
+        <h3 class="add-note__title">Добавить заметку</h3>
+        <form class="add-note__form">
+          <input type="text" placeholder="Название">
+          <textarea name="description" id="description" cols="30" rows="10" placeholder="Описание"></textarea>
+          <button class="add-note__btn">Добавить</button>
+        </form>
+      </div>
+    </div>
+    <div class="main">
+
+    </div>
+  </div>
+
+  <!-- <h1 class="notes__title">Список заметок</h1>
   <form 
     class="notes__form"
     action="#" 
@@ -29,71 +47,139 @@
       />
     </ul>
   </div>
-  <div class="notes__empty" v-else>Заметок нет</div>
-  <!-- <div
-    class="form__description"
-    @click="showDescription(id, $event)"
-    v-if=""
-  >
-    
-  </div> -->
+  <div class="notes__empty" v-else>Заметок нет</div> -->
 </template>
 
 <script>
-import NoteItem from './components/NoteItem.vue';
+// import NoteItem from './components/NoteItem.vue';
 
-export default {
-  data() {
-    return {
-      inputValue: '',
-      notes: [],
-      firstId: 0,
-    }
-  },
-  methods: {
-    inputChangeHandler(event) {
-      this.inputValue = event.target.value;
-    },
-    addNewNote() {
-      if (!this.inputValue.trim()) {
-        return;
-      }
-      // const description = {
-      //   text: 
-      // }
-      this.notes.push({
-        title: this.inputValue,
-        id: this.firstId,
-        isEditing: false,
-      });
-      this.inputValue = '';
-      this.firstId += 1;
-    },
-    removeNote(id) {
-      this.notes = this.notes.filter((note) => note.id !== id);
-    },
-    activateEditing(id) {
-      this.notes = this.notes.map((note) => {
-        if (note.id !== id) return note;
-        return { ...note, isEditing: true };
-      });
-    },
-    editNote(id, title) {
-      this.notes = this.notes.map((note) => {
-        if (note.id !== id) return note;
-        if (!title) return { ...note, isEditing: false };
-        return { id, title, isEditing: false };
-      });
-    }
-  },
-  components: {
-    NoteItem
-  }
-};
+// export default {
+//   data() {
+//     return {
+//       inputValue: '',
+//       notes: [],
+//       firstId: 0,
+//     }
+//   },
+//   methods: {
+//     inputChangeHandler(event) {
+//       this.inputValue = event.target.value;
+//     },
+//     addNewNote() {
+//       if (!this.inputValue.trim()) {
+//         return;
+//       }
+//       // const description = {
+//       //   text: 
+//       // }
+//       this.notes.push({
+//         title: this.inputValue,
+//         id: this.firstId,
+//         isEditing: false,
+//       });
+//       this.inputValue = '';
+//       this.firstId += 1;
+//     },
+//     removeNote(id) {
+//       this.notes = this.notes.filter((note) => note.id !== id);
+//     },
+//     activateEditing(id) {
+//       this.notes = this.notes.map((note) => {
+//         if (note.id !== id) return note;
+//         return { ...note, isEditing: true };
+//       });
+//     },
+//     editNote(id, title) {
+//       this.notes = this.notes.map((note) => {
+//         if (note.id !== id) return note;
+//         if (!title) return { ...note, isEditing: false };
+//         return { id, title, isEditing: false };
+//       });
+//     }
+//   },
+//   components: {
+//     NoteItem
+//   }
+// };
 </script>
 
 <style scoped>
-.notes__form {
+.container {
+  display: flex;
+}
+
+.side-bar {
+  height: 100vh;
+  padding: 30px;
+  background: #333333;
+}
+
+.side-bar__title {
+  font-weight: 200;
+  font-size: 40px;
+  margin-bottom: 77px;
+  color: #fff;
+}
+
+.line {
+  height: 1px;
+  width: 100%;
+  position: absolute;
+  top: 90px;
+  left: 30px;
+  background: #fff;
+}
+
+.add-note__title {
+  font-weight: bold;
+  font-size: 22px;
+  color: #fff;
+}
+
+.add-note__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-note__title,
+.add-note__form input,
+.add-note__form textarea {
+  margin-bottom: 20px;
+}
+
+.add-note__form input,
+.add-note__form textarea,
+.add-note__btn {
+  font-size: 16px;
+  border: 0;
+  border-radius: 5px;
+}
+
+.add-note__form input,
+.add-note__form textarea {
+  padding: 16px;
+}
+
+.add-note__form input:focus,
+.add-note__form textarea:focus,
+.add-note__btn:focus {
+  outline: none;
+}
+
+.add-note__form textarea {
+  resize: none;
+}
+
+.add-note__btn {
+  width: 114px;
+  font-size: 16px;
+  padding: 12px 18px;
+  background: #ffffff;
+  color: #333333;
+  cursor: pointer;
+}
+
+/* .notes__form {
   margin: 30px 0;
   display: flex;
   justify-content: flex-start;
@@ -176,6 +262,6 @@ export default {
 
 .notes__empty {
   color: #4DB6AC;
-}
+} */
 
 </style>
