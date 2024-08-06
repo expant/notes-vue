@@ -1,59 +1,64 @@
 <template>
-  <li @click="showDescription(id, $event)">
-    <span 
-      class="note-text" 
-      v-if="!isEditing" 
-      @click.stop="$emit('activate-editing', id);"
-    >
-      {{ title }}
-    </span>
-    <!-- TODO: фокусировка на input -->
-    <input
-      class="note-text-input" 
-      v-else 
-      @blur="prepareForEditing(id, $event)"
-      @keypress.enter="prepareForEditing(id, $event)"
-      ref="inputForEditing"
-      type="text"
-      :value="title"
-    >
-    <button class="note-delete" @click.stop="$emit('remove-note', id)">Удалить</button>
+  <li class="notes-item">
+    <span class="title">{{ title }}</span>
+    <div class="remove-note" @click="$emit('remove-note', id)">
+    </div>
   </li>
 </template>
 
 <script>
 export default {
-  emits: ['activate-editing', 'edit-note', 'remove-note'],
+  emits: ['remove-note'],
   props: {
     title: String,
+    description: String,
     id: Number,
-    isEditing: Boolean,
-  },
-  methods: {
-    prepareForEditing(id, event) {
-      const title = event.target.value.trim();
-      this.$emit('edit-note', id, title);
-    },
-    showDescription(id, event) {
-      
-    }
   },
 }
 </script>
 
 <style>
-.note-delete {
-  font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  background-clip: padding-box;
-  background-color: #fa6400;
-  border: 1px solid transparent;
-  border-radius: .25rem;
-  box-sizing: border-box;
-  color: #fff;
-  cursor: pointer;
-  padding: 5px 15px;
+.notes-item {
+  display: flex;
+  justify-content: space-between;
+  max-width: 300px;
+  background: #ffffff;
+  border: 1px solid #333;
+  border-radius: 5px;
 }
 
+.notes-item .title {
+  font-weight: 200;
+  font-size: 16px;
+  padding: 15px;
+  color: #333;
+}
+
+.remove-note {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  background: #333;
+  cursor: pointer;
+  transition: transform ease-in 0.1s;
+}
+
+.remove-note::after,
+.remove-note::before {
+  content: '';
+  position: absolute;
+  width: 25px;
+  height: 1px;
+  background: #D9D9D9;
+}
+
+.remove-note::after {
+  transform: rotate(45deg);
+}
+
+.remove-note::before {
+  transform: rotate(-45deg);
+}
 </style>

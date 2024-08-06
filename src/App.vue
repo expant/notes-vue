@@ -6,52 +6,94 @@
       <div class="side-bar__add-note">
         <h3 class="add-note__title">Добавить заметку</h3>
         <form class="add-note__form">
-          <input type="text" placeholder="Название">
-          <textarea name="description" id="description" cols="30" rows="10" placeholder="Описание"></textarea>
-          <button class="add-note__btn">Добавить</button>
+          <div class="add-note__title">
+            <input type="text" placeholder="Название" v-model="ui.addNoteForm.title">
+            <warning-item>Название не должно быть пустым</warning-item>
+          </div>
+          <div class="add-note_description">
+            <textarea 
+              name="description" 
+              id="description" 
+              cols="30" 
+              rows="10" 
+              placeholder="Описание"
+              v-model="ui.addNoteForm.description"
+            ></textarea>
+            <warning-item>Описание не должно быть пустым</warning-item>
+          </div>
+          <button class="add-note__btn" type="submit" @click.prevent="addNote">Добавить</button>
         </form>
       </div>
     </div>
-    <div class="main">
-
+    <div class="right-side">
+      <div class="search">
+        <label for="search">Поиск:</label>
+        <input type="text" name="search" placeholder="Найти">
+      </div>
+      <div class="content">
+        <div class="content__notes-count">Кол-во заметок: {{ idsCount }}</div>
+        <ul class="content__notes-list">
+          <note-item 
+            v-for="note in notes"
+            :key="note.id"
+            :title="note.title"
+            :description="note.description"
+            :id="note.id"
+            @remove-note="removeNote"
+          ></note-item>
+          <note-item 
+            class="preparatory-note"
+            v-if="ui.addNoteForm.title.trim()"
+            :title="ui.addNoteForm.title"
+          ></note-item>
+        </ul>
+      </div>
     </div>
   </div>
-
-  <!-- <h1 class="notes__title">Список заметок</h1>
-  <form 
-    class="notes__form"
-    action="#" 
-    @submit.prevent="addNewNote"
-  >
-    <input 
-      class="form__title"
-      type="text" 
-      placeholder="Добавить заметку"
-      v-model="inputValue"
-    >
-    <textarea class="form__description" name="description" id="description"></textarea>
-    <button class="form__btn" role="button">Добавить</button>
-  </form> 
-  <div class="notes__main" v-if="notes.length !== 0">
-    <div class="count">Кол-во заметок: {{ notes.length }}</div>
-    <ul class="items">
-      <NoteItem
-        v-for="note in notes"
-        :key="note.id"
-        :title="note.title"
-        :id="note.id"
-        :is-editing="note.isEditing"
-        @remove-note="removeNote"
-        @activate-editing="activateEditing"
-        @edit-note="editNote"
-      />
-    </ul>
-  </div>
-  <div class="notes__empty" v-else>Заметок нет</div> -->
 </template>
 
 <script>
-// import NoteItem from './components/NoteItem.vue';
+import NoteItem from './components/NoteItem.vue';
+import WarningItem from './components/WarningItem.vue';
+
+export default {
+  data() {
+    return {
+      ui: {
+        addNoteForm: {
+          title: '',
+          description: '',
+        }
+      },
+      idsCount: 0,
+      notes: [],
+    }
+  },
+  methods: {
+    addNote() {
+      const id = this.idsCount + 1;
+      const title = this.ui.addNoteForm.title;
+      const description = this.ui.addNoteForm.description;
+      if (!title.trim() || !description.trim()) {
+        return;
+      }
+
+      this.notes.push({ id, title, description });
+      this.idsCount += 1;
+      this.ui.addNoteForm.title = '';
+      this.ui.addNoteForm.description = '';
+    },
+    removeNote(id) {
+      console.log(this.notes);
+      this.notes = this.notes.filter((note) => note.id !== id);
+      this.idsCount -= 1;
+    }
+  },
+  components: {
+    NoteItem,
+    WarningItem,
+  },
+}
 
 // export default {
 //   data() {
@@ -114,6 +156,12 @@
   background: #333333;
 }
 
+.right-side {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .side-bar__title {
   font-weight: 200;
   font-size: 40px;
@@ -123,9 +171,9 @@
 
 .line {
   height: 1px;
-  width: 100%;
+  width: 100vw;
   position: absolute;
-  top: 90px;
+  top: 85px;
   left: 30px;
   background: #fff;
 }
@@ -149,7 +197,8 @@
 
 .add-note__form input,
 .add-note__form textarea,
-.add-note__btn {
+.add-note__btn,
+.search input {
   font-size: 16px;
   border: 0;
   border-radius: 5px;
@@ -162,7 +211,8 @@
 
 .add-note__form input:focus,
 .add-note__form textarea:focus,
-.add-note__btn:focus {
+.add-note__btn:focus,
+.search input:focus {
   outline: none;
 }
 
@@ -177,6 +227,40 @@
   background: #ffffff;
   color: #333333;
   cursor: pointer;
+}
+
+/* right-side (search) */
+.search {
+  display: flex;
+  align-items: center;
+  padding: 20px 90px;
+}
+
+.search input {
+  flex: 0 1 400px;
+  margin-left: 10px;
+  padding: 12px 15px;
+  border: 1px solid #333333;
+}
+
+.content {
+  padding: 73px 93px;
+}
+
+.content__notes-count {
+  color: #455A64;
+}
+
+.content__notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 30px;
+  list-style-type: none;
+}
+
+.preparatory-note {
+  opacity: 50%;
 }
 
 /* .notes__form {
