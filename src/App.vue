@@ -6,22 +6,15 @@
       <div class="side-bar__add-note">
         <h3 class="add-note__title">Добавить заметку</h3>
         <form class="add-note__form">
-          <div class="add-note__title">
-            <input type="text" placeholder="Название" v-model="ui.addNoteForm.title">
-            <warning-item>Название не должно быть пустым</warning-item>
-          </div>
-          <div class="add-note_description">
-            <textarea 
-              name="description" 
-              id="description" 
-              cols="30" 
-              rows="10" 
-              placeholder="Описание"
-              v-model="ui.addNoteForm.description"
-            ></textarea>
-            <warning-item>Описание не должно быть пустым</warning-item>
-          </div>
-          <button class="add-note__btn" type="submit" @click.prevent="addNote">Добавить</button>
+          <form-field
+            field="title"
+            v-model="addNoteForm.title.field"
+          ></form-field>
+          <form-fields
+            field="description"
+            v-model="addNoteForm.description.field"
+          ></form-fields>
+          <button class="add-note__btn" type="submit" @click.prevent="validateForm">Добавить</button>
         </form>
       </div>
     </div>
@@ -43,8 +36,8 @@
           ></note-item>
           <note-item 
             class="preparatory-note"
-            v-if="ui.addNoteForm.title.trim()"
-            :title="ui.addNoteForm.title"
+            v-if="addNoteForm.title.field.trim()"
+            :title="addNoteForm.title.field"
           ></note-item>
         </ul>
       </div>
@@ -54,15 +47,20 @@
 
 <script>
 import NoteItem from './components/NoteItem.vue';
+import FormField from './components/FormField.vue';
 import WarningItem from './components/WarningItem.vue';
 
 export default {
   data() {
     return {
-      ui: {
-        addNoteForm: {
-          title: '',
-          description: '',
+      addNoteForm: {
+        title: {
+          field: '',
+          isEmpty: false,
+        },
+        description: {
+          field: '',
+          isEmpty: false,
         }
       },
       idsCount: 0,
@@ -70,28 +68,26 @@ export default {
     }
   },
   methods: {
-    addNote() {
+    addNote(title, description) {
       const id = this.idsCount + 1;
-      const title = this.ui.addNoteForm.title;
-      const description = this.ui.addNoteForm.description;
-      if (!title.trim() || !description.trim()) {
-        return;
-      }
+      const title = this.addNoteForm.title.field;
+      const description = this.addNoteForm.description.field;
 
       this.notes.push({ id, title, description });
       this.idsCount += 1;
-      this.ui.addNoteForm.title = '';
-      this.ui.addNoteForm.description = '';
+      this.addNoteForm.title.field = '';
+      this.addNoteForm.description.field = '';
     },
     removeNote(id) {
       console.log(this.notes);
       this.notes = this.notes.filter((note) => note.id !== id);
-      this.idsCount -= 1;
-    }
+      this.idsCount -= 1; 
+    },
   },
   components: {
     NoteItem,
     WarningItem,
+    FormField,
   },
 }
 
@@ -178,6 +174,11 @@ export default {
   background: #fff;
 }
 
+.add-note__title,
+.add-note__description {
+  margin-bottom: 20px;
+}
+
 .add-note__title {
   font-weight: bold;
   font-size: 22px;
@@ -192,7 +193,7 @@ export default {
 .add-note__title,
 .add-note__form input,
 .add-note__form textarea {
-  margin-bottom: 20px;
+  width: 100%;
 }
 
 .add-note__form input,
@@ -262,90 +263,4 @@ export default {
 .preparatory-note {
   opacity: 50%;
 }
-
-/* .notes__form {
-  margin: 30px 0;
-  display: flex;
-  justify-content: flex-start;
-  gap: 10px;
-}
-
-.form__title {
-  font-size: 16px;
-  flex: 0 1 315px;
-  padding: 5px 5px;
-  border: 0;
-  border-bottom: 1px solid #fa6400;
-}
-
-.form__title:focus {
-  outline: 0;
-}
-
-.form__description {
-  height: auto;
-}
-
-.form__btn {
-  align-items: center;
-  background-clip: padding-box;
-  background-color: #fa6400;
-  border: 1px solid transparent;
-  border-radius: .25rem;
-  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
-  box-sizing: border-box;
-  color: #fff;
-  cursor: pointer;
-  display: inline-flex;
-  font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  justify-content: center;
-  line-height: 1.25;
-  margin: 0;
-  min-height: 3rem;
-  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
-  position: relative;
-  text-decoration: none;
-  transition: all 250ms;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  vertical-align: baseline;
-  width: auto;
-}
-
-.form__btn:hover,
-.form__btn:focus {
-  background-color: #fb8332;
-  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
-}
-
-.form__btn:hover {
-  transform: translateY(-1px);
-}
-
-.count {
-  margin-bottom: 10px;
-  color: #4DB6AC;
-}
-
-.items {
-  list-style-type: none;
-}
-
-.items li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  padding: 10px 20px;
-  border: 1px solid #fb8332;
-  border-radius: 5px;
-}
-
-.notes__empty {
-  color: #4DB6AC;
-} */
-
 </style>
