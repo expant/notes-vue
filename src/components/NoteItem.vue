@@ -28,8 +28,13 @@ export default {
 }
 
 .notes-item .title {
+  display: inline-block;
+  width: 250px;
   font-weight: 200;
   font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   padding: 15px;
   color: #333;
 }

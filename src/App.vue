@@ -8,17 +8,19 @@
         <form class="add-note__form">
           <form-field
             variant="input"
-            v-bind="addNoteForm.title"
+            :isEmpty="addNoteForm.title.isEmpty"
+            v-model="addNoteForm.title.field"
           ></form-field>
           <form-field
             variant="textarea"
-            v-bind="addNoteForm.description"
+            :isEmpty="addNoteForm.description.isEmpty"
+            v-model="addNoteForm.description.field"
           ></form-field>
           <button 
             class="add-note__btn" 
             type="submit" 
-            @click.prevent="addNote"
-            @submit.prevent="addNote"
+            @click.prevent="validateForm"
+            @submit.prevent="validateForm"
           >Добавить</button>
         </form>
       </div>
@@ -72,11 +74,19 @@ export default {
     }
   },
   methods: {
-    addNote() {
-      const id = this.idsCount + 1;
-      const title = this.addNoteForm.title.field;
-      const description = this.addNoteForm.description.field;
+    validateForm() {
+      const title = this.addNoteForm.title.field.trim();
+      const description = this.addNoteForm.description.field.trim();
+      this.addNoteForm.title.isEmpty = title ? false : true;;
+      this.addNoteForm.description.isEmpty = description ? false : true;
 
+      if (!title || !description) {
+        return
+      }
+      this.addNote(title, description);
+    },
+    addNote(title, description) {
+      const id = this.idsCount + 1;
       this.notes.push({ id, title, description });
       this.idsCount += 1;
       this.addNoteForm.title.field = '';
@@ -86,18 +96,6 @@ export default {
       this.notes = this.notes.filter((note) => note.id !== id);
       this.idsCount -= 1; 
     },
-    // validateForm() {
-    //   const title = this.addNoteForm.title.field;
-    //   const description = this.addNoteForm.description.field;
-    //   this.addNoteForm.title.isEmpty = title.trim() ? false : true;
-    //   this.addNoteForm.description.isEmpty = description.trim() ? false : true;
-
-    //   if (!title.trim() || !description.trim()) {
-    //     return;
-    //   }
-
-    //   this.addNote(title.trim(), description.trim());
-    // },
   },
   components: {
     NoteItem,
@@ -161,15 +159,20 @@ export default {
 }
 
 .side-bar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  flex: 1 0 400px;
   height: 100vh;
-  padding: 30px;
   background: #333333;
+  padding: 30px;
 }
 
 .right-side {
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-left: 400px;
 }
 
 .side-bar__title {
@@ -188,30 +191,12 @@ export default {
   background: #fff;
 }
 
-.add-note__title,
-.add-note__description {
-  margin-bottom: 20px;
-}
-
-.add-note__title {
-  font-weight: bold;
-  font-size: 22px;
-  color: #fff;
-}
 
 .add-note__form {
   display: flex;
   flex-direction: column;
 }
 
-.add-note__title,
-.add-note__form input,
-.add-note__form textarea {
-  width: 100%;
-}
-
-.add-note__form input,
-.add-note__form textarea,
 .add-note__btn,
 .search input {
   font-size: 16px;
@@ -219,21 +204,11 @@ export default {
   border-radius: 5px;
 }
 
-.add-note__form input,
-.add-note__form textarea {
-  padding: 16px;
-}
-
-.add-note__form input:focus,
-.add-note__form textarea:focus,
 .add-note__btn:focus,
 .search input:focus {
   outline: none;
 }
 
-.add-note__form textarea {
-  resize: none;
-}
 
 .add-note__btn {
   width: 114px;
