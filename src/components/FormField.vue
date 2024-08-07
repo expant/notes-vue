@@ -1,11 +1,14 @@
 <template>
-	<div class="add-note__title" v-if="field === 'title'">
-		<input type="text" placeholder="Название">
-		<warning-item 
-			v-if="!ui.addNoteForm.title.isEmpty"
-		>Название не должно быть пустым</warning-item>
+	<div class="add-note__title" v-if="variant === 'input'">
+		<input 
+			type="text" 
+			placeholder="Название"
+			:value="modelValue"
+    	@input="$emit('update:modelValue', $event.target.value)"
+		>
+		<!-- <span class="warning-item">Название не должно быть пустым</span> -->
 	</div>
-	<div class="add-note__description" v-if="field === 'description'">
+	<div class="add-note__description" v-if="variant === 'textarea'">
 		<textarea 
 			name="description" 
 			id="description" 
@@ -13,28 +16,17 @@
 			rows="10" 
 			placeholder="Описание"
 		></textarea>
-		<warning-item
-			v-if="!ui.addNoteForm.description.isEmpty"
-		>Описание не должно быть пустым</warning-item>
+		<!-- <span class="warning-item">Описание не должно быть пустым</span> -->
   </div>
 </template>
 
 <script>
 	export default {
 		props: {
-			field: String,
+			variant: String,
+			modelValue: String,
 		},
-		methods: {
-			validateForm() {
-      const title = this.addNoteForm.title.field;
-      const description = this.addNoteForm.description.field;
-      this.addNoteForm.title.isEmpty = title.trim()  ? false : true;
-      this.addNoteForm.description.isEmpty = description.trim() ? false : true;
-      if () {
-        
-      }
-    },
-		}
+		emits: ['update:modelValue'],
 	}
 </script>
 

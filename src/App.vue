@@ -7,14 +7,19 @@
         <h3 class="add-note__title">Добавить заметку</h3>
         <form class="add-note__form">
           <form-field
-            field="title"
-            v-model="addNoteForm.title.field"
+            variant="input"
+            v-bind="addNoteForm.title"
           ></form-field>
-          <form-fields
-            field="description"
-            v-model="addNoteForm.description.field"
-          ></form-fields>
-          <button class="add-note__btn" type="submit" @click.prevent="validateForm">Добавить</button>
+          <form-field
+            variant="textarea"
+            v-bind="addNoteForm.description"
+          ></form-field>
+          <button 
+            class="add-note__btn" 
+            type="submit" 
+            @click.prevent="addNote"
+            @submit.prevent="addNote"
+          >Добавить</button>
         </form>
       </div>
     </div>
@@ -48,7 +53,6 @@
 <script>
 import NoteItem from './components/NoteItem.vue';
 import FormField from './components/FormField.vue';
-import WarningItem from './components/WarningItem.vue';
 
 export default {
   data() {
@@ -68,7 +72,7 @@ export default {
     }
   },
   methods: {
-    addNote(title, description) {
+    addNote() {
       const id = this.idsCount + 1;
       const title = this.addNoteForm.title.field;
       const description = this.addNoteForm.description.field;
@@ -79,14 +83,24 @@ export default {
       this.addNoteForm.description.field = '';
     },
     removeNote(id) {
-      console.log(this.notes);
       this.notes = this.notes.filter((note) => note.id !== id);
       this.idsCount -= 1; 
     },
+    // validateForm() {
+    //   const title = this.addNoteForm.title.field;
+    //   const description = this.addNoteForm.description.field;
+    //   this.addNoteForm.title.isEmpty = title.trim() ? false : true;
+    //   this.addNoteForm.description.isEmpty = description.trim() ? false : true;
+
+    //   if (!title.trim() || !description.trim()) {
+    //     return;
+    //   }
+
+    //   this.addNote(title.trim(), description.trim());
+    // },
   },
   components: {
     NoteItem,
-    WarningItem,
     FormField,
   },
 }
