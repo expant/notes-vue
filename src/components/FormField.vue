@@ -4,9 +4,12 @@
 			type="text" 
 			placeholder="Название"
 			:value="modelValue"
-    	@input="$emit('update:modelValue', $event.target.value)"
+    	@input="returnData($event)"
 		>
-		<div class="warning-item" v-if="isEmpty">Название не должно быть пустым</div>
+		<div 
+			class="warning-item" 
+			v-if="isEmpty || compareLength(MAX_TITLE)"
+		>{{ showWarningItem(isEmpty, variant) }}</div>
 	</div>
 	<div class="add-note__description" v-if="variant === 'textarea'">
 		<textarea 
@@ -16,9 +19,12 @@
 			rows="10" 
 			placeholder="Описание"
 			:value="modelValue"
-    	@input="$emit('update:modelValue', $event.target.value)"
+    	@input="returnData($event)"
 		></textarea>
-		<div class="warning-item" v-if="isEmpty">Описание не должно быть пустым</div>
+		<div 
+			class="warning-item" 
+			v-if="isEmpty || compareLength(MAX_DESCRIPTION)"
+		>{{ showWarningItem(isEmpty, variant) }}</div>
   </div>
 </template>
 
@@ -35,7 +41,47 @@
 			},
 			isEmpty: Boolean,
 		},
-		emits: ['update:modelValue'],
+		emits: ['update:modelValue', 'update-form-state'],
+		data() {
+			return {
+				MAX_TITLE: 30,
+				MAX_DESCRIPTION: 400,
+				// isNewsEmpty: this.isEmpty,
+			}
+		},
+		methods: {
+			compareLength(maxLength) {
+				return this.modelValue.length > maxLength;
+			},
+			showWarningItem(isEmpty, variant) {
+				console.log(isEmpty, variant);
+				const warningMessages = {
+					input: {
+						forEmpty: 'Название не должно быть пустым',
+						forOverflow: `Слишком длинное название. Не более ${this.MAX_TITLE} символов`,
+					},
+					textarea: {
+						forEmpty: 'Описание не должно быть пустым',
+						forOverflow: `Слишком длинное описание. Не более ${this.MAX_DESCRIPTION} символов`,
+					}
+				};
+				const { forEmpty, forOverflow } = warningMessages[variant];
+				return isEmpty ? forEmpty : forOverflow; 
+			},
+			returnData(event) {
+				// this.isNewsEmpty = this.modelValue ? false : true;
+				// this.$emit(
+				// 	'update-form-state',
+				// 	{ 
+				// 		isEmpty: this.isNewsEmpty,
+				// 		variant: this.variant,
+				// 		value: this.modelValue,
+				// 	} 
+				// );
+				this.$emit('update:modelValue', event.target.value);
+				this.showWarningItem(this.isEmpty, this.variant);
+			},
+		},
 	}
 </script>
 

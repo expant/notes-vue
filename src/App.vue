@@ -10,11 +10,13 @@
             variant="input"
             :isEmpty="addNoteForm.title.isEmpty"
             v-model="addNoteForm.title.field"
+
           ></form-field>
           <form-field
             variant="textarea"
             :isEmpty="addNoteForm.description.isEmpty"
             v-model="addNoteForm.description.field"
+        
           ></form-field>
           <button 
             class="add-note__btn" 
@@ -40,6 +42,7 @@
             :description="note.description"
             :id="note.id"
             @remove-note="removeNote"
+            @click="showModal(note.id)"
           ></note-item>
           <note-item 
             class="preparatory-note"
@@ -48,6 +51,17 @@
           ></note-item>
         </ul>
       </div>
+    </div>
+  </div>
+  <div class="modal-background" v-if="modal.isVisible">
+    <div class="modal-item">
+      <h2 class="modal-item__title">{{ modal.title }}</h2>
+      <p class="modal-item__description">{{ modal.description }}</p>
+      <div class="modal-item__btns">
+        <button class="completed">Выполнено</button>
+        <button class="remove" @click="hideModal(modal.noteId)">Удалить</button>
+      </div>
+      <div class="close" @click="modal.isVisible = false"></div>
     </div>
   </div>
 </template>
@@ -69,6 +83,12 @@ export default {
           isEmpty: false,
         }
       },
+      modal: {
+        isVisible: false,
+        noteId: null,
+        title: '',
+        description: '',
+      },
       idsCount: 0,
       notes: [],
     }
@@ -81,8 +101,16 @@ export default {
       this.addNoteForm.description.isEmpty = description ? false : true;
 
       if (!title || !description) {
-        return
+        return;
       }
+
+      const isTitleTooLong = title.length > 30;
+      const isDescriptionTooLong = description.length > 400;
+
+      if (isTitleTooLong || isDescriptionTooLong) {
+        return;
+      }
+
       this.addNote(title, description);
     },
     addNote(title, description) {
@@ -96,64 +124,128 @@ export default {
       this.notes = this.notes.filter((note) => note.id !== id);
       this.idsCount -= 1; 
     },
+    showModal(id) {
+      const note = this.notes.find((item) => item.id === id);
+      this.modal.noteId = id;
+      this.modal.title = note.title;
+      this.modal.description = note.description;
+      this.modal.isVisible = true;
+    },
+    hideModal(id) {
+      this.modal.isVisible = false;
+      this.removeNote(id);
+    },
+    // updateFormState(data) {
+    //   console.log(data);
+    //   const { isEmpty, variant } = data;
+    //   if (variant === 'input') {
+    //     this.addNoteForm.title.isEmpty = isEmpty;
+    //     return;
+    //   }
+    //   this.addNoteForm.description.isEmpty = isEmpty;   
+    // }
   },
   components: {
     NoteItem,
     FormField,
   },
 }
-
-// export default {
-//   data() {
-//     return {
-//       inputValue: '',
-//       notes: [],
-//       firstId: 0,
-//     }
-//   },
-//   methods: {
-//     inputChangeHandler(event) {
-//       this.inputValue = event.target.value;
-//     },
-//     addNewNote() {
-//       if (!this.inputValue.trim()) {
-//         return;
-//       }
-//       // const description = {
-//       //   text: 
-//       // }
-//       this.notes.push({
-//         title: this.inputValue,
-//         id: this.firstId,
-//         isEditing: false,
-//       });
-//       this.inputValue = '';
-//       this.firstId += 1;
-//     },
-//     removeNote(id) {
-//       this.notes = this.notes.filter((note) => note.id !== id);
-//     },
-//     activateEditing(id) {
-//       this.notes = this.notes.map((note) => {
-//         if (note.id !== id) return note;
-//         return { ...note, isEditing: true };
-//       });
-//     },
-//     editNote(id, title) {
-//       this.notes = this.notes.map((note) => {
-//         if (note.id !== id) return note;
-//         if (!title) return { ...note, isEditing: false };
-//         return { id, title, isEditing: false };
-//       });
-//     }
-//   },
-//   components: {
-//     NoteItem
-//   }
-// };
 </script>
 
 <style scoped>
+.modal-background {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(51, 51, 51, 0.7);
+  z-index: 1;
+}
+
+.modal-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 600px;
+  height: 495px;
+  padding: 30px 40px;
+  background: #ffffff;
+  border-radius: 20px;
+  z-index: 2;
+}
+
+.modal-item__title,
+.modal-item__description {
+  font-size: 20px;
+}
+
+.modal-item__title {
+  font-weight: 500;
+}
+
+.modal-item__description {
+  font-weight: 200;
+}
+
+.modal-item .close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+
+.modal-item .close::after,
+.modal-item .close::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  width: 25px;
+  height: 1px;
+  background: #333333;
+  cursor: pointer;
+}
+
+.modal-item .close::after {
+  transform: rotate(45deg);
+}
+
+.modal-item .close::before {
+  transform: rotate(-45deg);
+}
+
+.modal-item__btns {
+  margin-top: auto;
+}
+
+.modal-item__btns .completed,
+.modal-item__btns .remove {
+  font-weight: 200;
+  font-size: 20px;
+  padding: 12px 17px;
+  border-radius: 5px;
+  border: 1px solid #333333;
+  cursor: pointer;
+}
+
+.modal-item__btns .completed {
+  margin-right: 13px;
+  color: #ffffff;
+  background: #333333;
+}
+
+.modal-item__btns .remove {
+  color: #333333;
+  background: #ffffff;
+}
+
+/* -------------------  */
 .container {
   display: flex;
 }
