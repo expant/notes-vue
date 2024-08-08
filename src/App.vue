@@ -33,23 +33,26 @@
         <input type="text" name="search" placeholder="Найти">
       </div>
       <div class="content">
-        <div class="content__notes-count">Кол-во заметок: {{ idsCount }}</div>
-        <ul class="content__notes-list">
-          <note-item 
-            v-for="note in notes"
-            :key="note.id"
-            :title="note.title"
-            :description="note.description"
-            :id="note.id"
-            @remove-note="removeNote"
-            @click="showModal(note.id)"
-          ></note-item>
-          <note-item 
-            class="preparatory-note"
-            v-if="addNoteForm.title.field.trim()"
-            :title="addNoteForm.title.field"
-          ></note-item>
-        </ul>
+        <div class="active-notes notes">
+          <div class="active-notes__count notes-count">Активные: {{ idsCount }}</div>
+          <ul class="active-notes__list notes-list">
+            <note-item 
+              v-for="note in notes.active"
+              :key="note.id"
+              :title="note.title"
+              :description="note.description"
+              :id="note.id"
+              @remove-note="removeNote"
+              @click="showModal(note.id)"
+            ></note-item>
+            <note-item 
+              class="preparatory-note"
+              v-if="addNoteForm.title.field.trim()"
+              :title="addNoteForm.title.field"
+            ></note-item>
+          </ul>
+        </div>
+        <CompletedNotes />
       </div>
     </div>
   </div>
@@ -58,7 +61,8 @@
       <h2 class="modal-item__title">{{ modal.title }}</h2>
       <p class="modal-item__description">{{ modal.description }}</p>
       <div class="modal-item__btns">
-        <button class="completed">Выполнено</button>
+        <!-- FIXME: Нужно передавать id заметки в completeNote -->
+        <button class="completed" @click="completeNote()">Выполнено</button>
         <button class="remove" @click="hideModal(modal.noteId)">Удалить</button>
       </div>
       <div class="close" @click="modal.isVisible = false"></div>
@@ -68,6 +72,7 @@
 
 <script>
 import NoteItem from './components/NoteItem.vue';
+import CompletedNotes from './components/Notes/CompletedNotes.vue';
 import FormField from './components/FormField.vue';
 
 export default {
@@ -90,7 +95,10 @@ export default {
         description: '',
       },
       idsCount: 0,
-      notes: [],
+      notes: {
+        active: [],
+        completed: [],
+      },
     }
   },
   methods: {
@@ -115,17 +123,17 @@ export default {
     },
     addNote(title, description) {
       const id = this.idsCount + 1;
-      this.notes.push({ id, title, description });
+      this.notes.active.push({ id, title, description });
       this.idsCount += 1;
       this.addNoteForm.title.field = '';
       this.addNoteForm.description.field = '';
     },
     removeNote(id) {
-      this.notes = this.notes.filter((note) => note.id !== id);
+      this.notes.active = this.notes.active.filter((note) => note.id !== id);
       this.idsCount -= 1; 
     },
     showModal(id) {
-      const note = this.notes.find((item) => item.id === id);
+      const note = this.notes.active.find((item) => item.id === id);
       this.modal.noteId = id;
       this.modal.title = note.title;
       this.modal.description = note.description;
@@ -134,6 +142,11 @@ export default {
     hideModal(id) {
       this.modal.isVisible = false;
       this.removeNote(id);
+    },
+    completeNote(id) {
+      const note = this.notes.active.find((item) => item.id === id);
+      this.removeNote(id);
+      this.notes.completed.push(note);
     },
     // updateFormState(data) {
     //   console.log(data);
@@ -148,6 +161,7 @@ export default {
   components: {
     NoteItem,
     FormField,
+    CompletedNotes,
   },
 }
 </script>
@@ -190,6 +204,7 @@ export default {
 
 .modal-item__description {
   font-weight: 200;
+  word-wrap: break-word;
 }
 
 .modal-item .close {
@@ -326,14 +341,29 @@ export default {
 }
 
 .content {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  gap: 50px;
   padding: 73px 93px;
 }
 
-.content__notes-count {
+.notes {
+  flex: 0 0 370px;
+  padding: 30px;
+  background: #eee;
+  border-radius: 10px;
+}
+
+.active-notes {
+  background: #ffffff;
+}
+
+.active-notes__count {
   color: #455A64;
 }
 
-.content__notes-list {
+.notes-list {
   display: flex;
   flex-direction: column;
   gap: 10px;

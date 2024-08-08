@@ -21,7 +21,7 @@ export default {
 .notes-item {
   display: flex;
   justify-content: space-between;
-  max-width: 300px;
+  width: 100%;
   background: #ffffff;
   border: 1px solid #333;
   border-radius: 5px;
