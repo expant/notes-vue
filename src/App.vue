@@ -9,12 +9,14 @@
           <form-field
             variant="input"
             :isEmpty="addNoteForm.title.isEmpty"
+            :maxLength="addNoteForm.title.maxLength"
             v-model="addNoteForm.title.field"
 
           ></form-field>
           <form-field
             variant="textarea"
             :isEmpty="addNoteForm.description.isEmpty"
+            :maxLength="addNoteForm.description.maxLength"
             v-model="addNoteForm.description.field"
         
           ></form-field>
@@ -34,7 +36,7 @@
       </div>
       <div class="content">
         <div class="active-notes notes">
-          <div class="active-notes__count notes-count">Активные: {{ idsCount }}</div>
+          <div class="active-notes__count notes-count">Активные: {{ notes.active.length }}</div>
           <ul class="active-notes__list notes-list">
             <note-item 
               v-for="note in notes.active"
@@ -43,7 +45,7 @@
               :description="note.description"
               :id="note.id"
               @remove-note="removeNote"
-              @click="showModal(note.id)"
+              @show-modal="showModal"
             ></note-item>
             <note-item 
               class="preparatory-note"
@@ -52,7 +54,11 @@
             ></note-item>
           </ul>
         </div>
-        <CompletedNotes />
+        <completed-notes
+          :notes="this.notes.completed"
+          @remove-note="removeNote"
+          @return-to-active="returnToActive"
+        ></completed-notes>
       </div>
     </div>
   </div>
@@ -61,9 +67,8 @@
       <h2 class="modal-item__title">{{ modal.title }}</h2>
       <p class="modal-item__description">{{ modal.description }}</p>
       <div class="modal-item__btns">
-        <!-- FIXME: Нужно передавать id заметки в completeNote -->
-        <button class="completed" @click="completeNote()">Выполнено</button>
-        <button class="remove" @click="hideModal(modal.noteId)">Удалить</button>
+        <button class="completed" @click="completeNote(modal.noteId)">Выполнено</button>
+        <button class="remove" @click="removeNote(modal.noteId, 'active')">Удалить</button>
       </div>
       <div class="close" @click="modal.isVisible = false"></div>
     </div>
@@ -71,7 +76,7 @@
 </template>
 
 <script>
-import NoteItem from './components/NoteItem.vue';
+import NoteItem from './components/Notes/NoteItem.vue';
 import CompletedNotes from './components/Notes/CompletedNotes.vue';
 import FormField from './components/FormField.vue';
 
@@ -82,11 +87,13 @@ export default {
         title: {
           field: '',
           isEmpty: false,
+          maxLength: 30,
         },
         description: {
           field: '',
           isEmpty: false,
-        }
+          maxLength: 400,
+        },
       },
       modal: {
         isVisible: false,
@@ -94,43 +101,57 @@ export default {
         title: '',
         description: '',
       },
-      idsCount: 0,
       notes: {
         active: [],
         completed: [],
       },
     }
   },
+  // TODO: Прокидывать массив заметок
+  provide() {
+    return {
+      activeNotes: this.notes.active,
+      completedNotes: this.notes.completed,  
+    }
+  },
   methods: {
     validateForm() {
-      const title = this.addNoteForm.title.field.trim();
-      const description = this.addNoteForm.description.field.trim();
+      const title = this.addNoteForm.title;
+      const description = this.addNoteForm.description;
+      const titleField = title.field.trim();
+      const descriptionField = description.field.trim();
       this.addNoteForm.title.isEmpty = title ? false : true;;
       this.addNoteForm.description.isEmpty = description ? false : true;
 
-      if (!title || !description) {
+      if (!titleField || !descriptionField) {
         return;
       }
 
-      const isTitleTooLong = title.length > 30;
-      const isDescriptionTooLong = description.length > 400;
+      const isTitleTooLong = titleField.length > title.maxLength;
+      const isDescriptionTooLong = descriptionField.length > description.maxLength;
 
       if (isTitleTooLong || isDescriptionTooLong) {
         return;
       }
-
-      this.addNote(title, description);
+      this.addNote(titleField, descriptionField);
     },
     addNote(title, description) {
-      const id = this.idsCount + 1;
+      const id = this.notes.active.length + 1;
       this.notes.active.push({ id, title, description });
-      this.idsCount += 1;
       this.addNoteForm.title.field = '';
       this.addNoteForm.description.field = '';
     },
-    removeNote(id) {
-      this.notes.active = this.notes.active.filter((note) => note.id !== id);
-      this.idsCount -= 1; 
+    removeNote(id, noteType) {
+      if (this.modal.isVisible) {
+        this.modal.isVisible = false;
+      }
+      this.notes[noteType] = this.notes[noteType]
+        .filter((note) => note.id !== id);
+    },
+    returnToActive(note) {
+      const length = this.notes.active.length;
+      this.removeNote(note.id, 'completed');
+      this.notes.active.push({ ...note, id: length + 1 });
     },
     showModal(id) {
       const note = this.notes.active.find((item) => item.id === id);
@@ -139,14 +160,13 @@ export default {
       this.modal.description = note.description;
       this.modal.isVisible = true;
     },
-    hideModal(id) {
-      this.modal.isVisible = false;
-      this.removeNote(id);
-    },
     completeNote(id) {
       const note = this.notes.active.find((item) => item.id === id);
-      this.removeNote(id);
-      this.notes.completed.push(note);
+      const length = this.notes.completed.length;
+      const completedNoteId = !length ? 1 : length + 1; 
+      this.removeNote(id, 'active');
+      this.notes.completed.push({ ...note, id: completedNoteId});
+      this.modal.isVisible = false;
     },
     // updateFormState(data) {
     //   console.log(data);
@@ -351,7 +371,6 @@ export default {
 .notes {
   flex: 0 0 370px;
   padding: 30px;
-  background: #eee;
   border-radius: 10px;
 }
 

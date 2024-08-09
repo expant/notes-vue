@@ -8,7 +8,7 @@
 		>
 		<div 
 			class="warning-item" 
-			v-if="isEmpty || compareLength(MAX_TITLE)"
+			v-if="isEmpty || compareLength(maxLength)"
 		>{{ showWarningItem(isEmpty, variant) }}</div>
 	</div>
 	<div class="add-note__description" v-if="variant === 'textarea'">
@@ -23,7 +23,7 @@
 		></textarea>
 		<div 
 			class="warning-item" 
-			v-if="isEmpty || compareLength(MAX_DESCRIPTION)"
+			v-if="isEmpty || compareLength(maxLength)"
 		>{{ showWarningItem(isEmpty, variant) }}</div>
   </div>
 </template>
@@ -31,6 +31,7 @@
 <script>
 	export default {
 		props: {
+			maxLength: Number,
 			variant: {
 				type: String,
 				required: true,
@@ -42,42 +43,25 @@
 			isEmpty: Boolean,
 		},
 		emits: ['update:modelValue', 'update-form-state'],
-		data() {
-			return {
-				MAX_TITLE: 30,
-				MAX_DESCRIPTION: 400,
-				// isNewsEmpty: this.isEmpty,
-			}
-		},
 		methods: {
 			compareLength(maxLength) {
 				return this.modelValue.length > maxLength;
 			},
 			showWarningItem(isEmpty, variant) {
-				console.log(isEmpty, variant);
 				const warningMessages = {
 					input: {
 						forEmpty: 'Название не должно быть пустым',
-						forOverflow: `Слишком длинное название. Не более ${this.MAX_TITLE} символов`,
+						forOverflow: `Слишком длинное название. Не более ${this.maxLength} символов`,
 					},
 					textarea: {
 						forEmpty: 'Описание не должно быть пустым',
-						forOverflow: `Слишком длинное описание. Не более ${this.MAX_DESCRIPTION} символов`,
+						forOverflow: `Слишком длинное описание. Не более ${this.maxLength} символов`,
 					}
 				};
 				const { forEmpty, forOverflow } = warningMessages[variant];
 				return isEmpty ? forEmpty : forOverflow; 
 			},
 			returnData(event) {
-				// this.isNewsEmpty = this.modelValue ? false : true;
-				// this.$emit(
-				// 	'update-form-state',
-				// 	{ 
-				// 		isEmpty: this.isNewsEmpty,
-				// 		variant: this.variant,
-				// 		value: this.modelValue,
-				// 	} 
-				// );
 				this.$emit('update:modelValue', event.target.value);
 				this.showWarningItem(this.isEmpty, this.variant);
 			},
