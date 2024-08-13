@@ -44,21 +44,23 @@
               :title="note.title"
               :description="note.description"
               :id="note.id"
-              @remove-note="removeNote"
+              type="active"
               @show-modal="showModal"
+              @remove-note="removeNote"
             ></note-item>
             <note-item 
               class="preparatory-note"
               v-if="addNoteForm.title.field.trim()"
               :title="addNoteForm.title.field"
+              type="active"
             ></note-item>
           </ul>
         </div>
-        <completed-notes
+        <!-- <completed-notes
           :notes="this.notes.completed"
           @remove-note="removeNote"
           @return-to-active="returnToActive"
-        ></completed-notes>
+        ></completed-notes> -->
       </div>
     </div>
   </div>
@@ -76,6 +78,7 @@
 </template>
 
 <script>
+// import { computed } from 'vue';
 import NoteItem from './components/Notes/NoteItem.vue';
 import CompletedNotes from './components/Notes/CompletedNotes.vue';
 import FormField from './components/FormField.vue';
@@ -108,12 +111,12 @@ export default {
     }
   },
   // TODO: Прокидывать массив заметок
-  provide() {
-    return {
-      activeNotes: this.notes.active,
-      completedNotes: this.notes.completed,  
-    }
-  },
+  // provide() {
+  //   return {
+  //     notes: computed(() => this.notes),
+  //     modal: computed(() => this.modal),
+  //   }
+  // },
   methods: {
     validateForm() {
       const title = this.addNoteForm.title;
@@ -159,14 +162,6 @@ export default {
       this.modal.title = note.title;
       this.modal.description = note.description;
       this.modal.isVisible = true;
-    },
-    completeNote(id) {
-      const note = this.notes.active.find((item) => item.id === id);
-      const length = this.notes.completed.length;
-      const completedNoteId = !length ? 1 : length + 1; 
-      this.removeNote(id, 'active');
-      this.notes.completed.push({ ...note, id: completedNoteId});
-      this.modal.isVisible = false;
     },
     // updateFormState(data) {
     //   console.log(data);
