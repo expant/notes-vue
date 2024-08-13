@@ -34,6 +34,8 @@
         <label for="search">Поиск:</label>
         <input type="text" name="search" placeholder="Найти">
       </div>
+      <!-- Notes lists -->
+      <!-- <notes-main></notes-main> -->
       <div class="content">
         <div class="active-notes notes">
           <div class="active-notes__count notes-count">Активные: {{ notes.active.length }}</div>
@@ -56,11 +58,21 @@
             ></note-item>
           </ul>
         </div>
-        <!-- <completed-notes
-          :notes="this.notes.completed"
-          @remove-note="removeNote"
-          @return-to-active="returnToActive"
-        ></completed-notes> -->
+        <div class="completed-notes notes">
+          <div class="completed-notes__count notes-count">Завершённые: {{ notes.completed.length }}</div>
+          <ul class="completed-notes__list notes-list">
+            <note-item
+              v-for="note in notes.completed"
+              :key="note.id"
+              :title="note.title"
+              :description="note.description"
+              :id="note.id"
+              type="completed"
+              @remove-note="removeNote"
+              @return-to-active="returnToActive"
+            ></note-item>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -78,9 +90,7 @@
 </template>
 
 <script>
-// import { computed } from 'vue';
-import NoteItem from './components/Notes/NoteItem.vue';
-import CompletedNotes from './components/Notes/CompletedNotes.vue';
+import NoteItem from './components/NoteItem.vue';
 import FormField from './components/FormField.vue';
 
 export default {
@@ -110,13 +120,6 @@ export default {
       },
     }
   },
-  // TODO: Прокидывать массив заметок
-  // provide() {
-  //   return {
-  //     notes: computed(() => this.notes),
-  //     modal: computed(() => this.modal),
-  //   }
-  // },
   methods: {
     validateForm() {
       const title = this.addNoteForm.title;
@@ -151,10 +154,19 @@ export default {
       this.notes[noteType] = this.notes[noteType]
         .filter((note) => note.id !== id);
     },
-    returnToActive(note) {
+    returnToActive(id) {
       const length = this.notes.active.length;
-      this.removeNote(note.id, 'completed');
+      const note = this.notes.completed.find((item) => id === item.id);
+      this.removeNote(id, 'completed');
       this.notes.active.push({ ...note, id: length + 1 });
+    },
+    completeNote(id) {
+      const note = this.notes.active.find((item) => item.id === id);
+      const length = this.notes.completed.length;
+      const completedNoteId = !length ? 1 : length + 1; 
+      this.removeNote(id, 'active');
+      this.notes.completed.push({ ...note, id: completedNoteId});
+      this.modal.isVisible = false;
     },
     showModal(id) {
       const note = this.notes.active.find((item) => item.id === id);
@@ -176,7 +188,6 @@ export default {
   components: {
     NoteItem,
     FormField,
-    CompletedNotes,
   },
 }
 </script>
@@ -387,5 +398,18 @@ export default {
 
 .preparatory-note {
   opacity: 50%;
+}
+
+.completed-notes {
+  background-color: #FFFAFA;
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(15px);
+}
+
+.notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 30px;
 }
 </style>
