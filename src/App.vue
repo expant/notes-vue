@@ -6,9 +6,21 @@
       <div class="side-bar__add-note">
         <h3 class="add-note__title">Добавить заметку</h3>
         <form class="add-note__form">
-          <form-field
+          <input 
+            type="text"
+            placeholder="Название"
+            v-model="addNoteTitle.field"
+          >
+          <textarea 
+            name="description" 
+            placeholder="Описание"
+            v-model="addNoteDescription.field" 
+            cols="30"
+            rows="10"
+          ></textarea>
+          <!-- <form-field
             variant="input"
-            :isEmpty="addNoteForm.title.isEmpty"
+            :isEmpty="addNoteTitle.isEmpty"
             :maxLength="addNoteForm.title.maxLength"
             v-model="addNoteForm.title.field"
           ></form-field>
@@ -17,7 +29,7 @@
             :isEmpty="addNoteForm.description.isEmpty"
             :maxLength="addNoteForm.description.maxLength"
             v-model="addNoteForm.description.field"
-          ></form-field>
+          ></form-field> -->
           <button 
             class="add-note__btn"
             type="submit" 
@@ -25,15 +37,17 @@
             @submit.prevent="validateForm"
           >Добавить</button>
         </form>
+        <div>
+          <span>Title: {{ addNoteTitle.field }}</span>
+          <span>Description: {{ addNoteDescription.field }}</span>
+        </div>
       </div>
     </div>
-    <div class="right-side">
+    <!-- <div class="right-side">
       <div class="search">
         <label for="search">Поиск:</label>
         <input type="text" name="search" placeholder="Найти">
       </div>
-      <!-- Notes lists -->
-      <!-- <notes-main></notes-main> -->
       <div class="content">
         <div class="active-notes notes">
           <div class="active-notes__count notes-count">Активные: {{ notes.active.length }}</div>
@@ -71,9 +85,9 @@
           </ul>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
-  <div class="modal-background" v-if="modal.isVisible">
+  <!-- <div class="modal-background" v-if="modal.isVisible">
     <div class="modal-item">
       <h2 class="modal-item__title">{{ modal.title }}</h2>
       <p class="modal-item__description">{{ modal.description }}</p>
@@ -83,110 +97,123 @@
       </div>
       <div class="close" @click="modal.isVisible = false"></div>
     </div>
-  </div>
+  </div> -->
 </template>
 
-<script>
-import NoteItem from './components/NoteItem.vue';
-import FormField from './components/FormField.vue';
+<script setup>
+import { reactive } from 'vue';
+// import NoteItem from './components/NoteItem.vue';
+// import FormField from './components/FormField.vue';
 
-export default {
-  data() {
-    return {
-      addNoteForm: {
-        title: {
-          field: '',
-          isEmpty: false,
-          maxLength: 30,
-        },
-        description: {
-          field: '',
-          isEmpty: false,
-          maxLength: 400,
-        },
-      },
-      modal: {
-        isVisible: false,
-        noteId: null,
-        title: '',
-        description: '',
-      },
-      notes: {
-        active: [],
-        completed: [],
-      },
-    }
-  },
-  methods: {
-    validateForm() {
-      const title = this.addNoteForm.title;
-      const description = this.addNoteForm.description;
-      const titleField = title.field.trim();
-      const descriptionField = description.field.trim();
-      this.addNoteForm.title.isEmpty = title ? false : true;;
-      this.addNoteForm.description.isEmpty = description ? false : true;
+const addNoteTitle = reactive({
+  field: '',
+  isEmpty: false,
+  maxLength: 30,
+});
 
-      if (!titleField || !descriptionField) {
-        return;
-      }
+const addNoteDescription = reactive({
+  field: '',
+  isEmpty: false,
+  maxLength: 400,
+});
 
-      const isTitleTooLong = titleField.length > title.maxLength;
-      const isDescriptionTooLong = descriptionField.length > description.maxLength;
+// export default {
+//   data() {
+//     return {
+//       addNoteForm: {
+//         title: {
+//           field: '',
+//           isEmpty: false,
+//           maxLength: 30,
+//         },
+//         description: {
+//           field: '',
+//           isEmpty: false,
+//           maxLength: 400,
+//         },
+//       },
+      // modal: {
+      //   isVisible: false,
+      //   noteId: null,
+      //   title: '',
+      //   description: '',
+      // },
+      // notes: {
+      //   active: [],
+      //   completed: [],
+      // },
+  //   }
+  // },
+  // methods: {
+  //   validateForm() {
+  //     const title = this.addNoteForm.title;
+  //     const description = this.addNoteForm.description;
+  //     const titleField = title.field.trim();
+  //     const descriptionField = description.field.trim();
+  //     this.addNoteForm.title.isEmpty = title ? false : true;;
+  //     this.addNoteForm.description.isEmpty = description ? false : true;
 
-      if (isTitleTooLong || isDescriptionTooLong) {
-        return;
-      }
-      this.addNote(titleField, descriptionField);
-    },
-    addNote(title, description) {
-      const id = this.notes.active.length + 1;
-      this.notes.active.push({ id, title, description });
-      this.addNoteForm.title.field = '';
-      this.addNoteForm.description.field = '';
-    },
-    removeNote(id, noteType) {
-      if (this.modal.isVisible) {
-        this.modal.isVisible = false;
-      }
-      this.notes[noteType] = this.notes[noteType]
-        .filter((note) => note.id !== id);
-    },
-    returnToActive(id) {
-      const length = this.notes.active.length;
-      const note = this.notes.completed.find((item) => id === item.id);
-      this.removeNote(id, 'completed');
-      this.notes.active.push({ ...note, id: length + 1 });
-    },
-    completeNote(id) {
-      const note = this.notes.active.find((item) => item.id === id);
-      const length = this.notes.completed.length;
-      const completedNoteId = !length ? 1 : length + 1; 
-      this.removeNote(id, 'active');
-      this.notes.completed.push({ ...note, id: completedNoteId});
-      this.modal.isVisible = false;
-    },
-    showModal(id) {
-      const note = this.notes.active.find((item) => item.id === id);
-      this.modal.noteId = id;
-      this.modal.title = note.title;
-      this.modal.description = note.description;
-      this.modal.isVisible = true;
-    },
-    // updateFormState(data) {
-    //   console.log(data);
-    //   const { isEmpty, variant } = data;
-    //   if (variant === 'input') {
-    //     this.addNoteForm.title.isEmpty = isEmpty;
-    //     return;
-    //   }
-    //   this.addNoteForm.description.isEmpty = isEmpty;   
-    // }
-  },
-  components: {
-    NoteItem,
-    FormField,
-  },
-}
+  //     if (!titleField || !descriptionField) {
+  //       return;
+  //     }
+
+  //     const isTitleTooLong = titleField.length > title.maxLength;
+  //     const isDescriptionTooLong = descriptionField.length > description.maxLength;
+
+  //     if (isTitleTooLong || isDescriptionTooLong) {
+  //       return;
+  //     }
+  //     this.addNote(titleField, descriptionField);
+  //   },
+  //   addNote(title, description) {
+  //     const id = this.notes.active.length + 1;
+  //     this.notes.active.push({ id, title, description });
+  //     this.addNoteForm.title.field = '';
+  //     this.addNoteForm.description.field = '';
+  //   },
+  //   removeNote(id, noteType) {
+  //     if (this.modal.isVisible) {
+  //       this.modal.isVisible = false;
+  //     }
+  //     this.notes[noteType] = this.notes[noteType]
+  //       .filter((note) => note.id !== id);
+  //   },
+  //   returnToActive(id) {
+  //     const length = this.notes.active.length;
+  //     const note = this.notes.completed.find((item) => id === item.id);
+  //     this.removeNote(id, 'completed');
+  //     this.notes.active.push({ ...note, id: length + 1 });
+  //   },
+  //   completeNote(id) {
+  //     const note = this.notes.active.find((item) => item.id === id);
+  //     const length = this.notes.completed.length;
+  //     const completedNoteId = !length ? 1 : length + 1; 
+  //     this.removeNote(id, 'active');
+  //     this.notes.completed.push({ ...note, id: completedNoteId});
+  //     this.modal.isVisible = false;
+  //   },
+  //   showModal(id) {
+  //     const note = this.notes.active.find((item) => item.id === id);
+  //     this.modal.noteId = id;
+  //     this.modal.title = note.title;
+  //     this.modal.description = note.description;
+  //     this.modal.isVisible = true;
+  //   },
+  //   // updateFormState(data) {
+  //   //   console.log(data);
+  //   //   const { isEmpty, variant } = data;
+  //   //   if (variant === 'input') {
+  //   //     this.addNoteForm.title.isEmpty = isEmpty;
+  //   //     return;
+  //   //   }
+  //   //   this.addNoteForm.description.isEmpty = isEmpty;   
+  //   // }
+  // },
+  // components: {
+  //   NoteItem,
+  //   FormField,
+  // },
+// }
 </script>
 
 <style scoped>
