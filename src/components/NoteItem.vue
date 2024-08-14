@@ -4,12 +4,17 @@
     <div class="remove-note" @click="$emit('remove-note', id, 'active')">
     </div>
   </li>
+  <li class="notes-item preparatory" v-if="type === 'preparatory'">
+    <span class="title">{{ title }}</span>
+    <div class="remove-note">
+    </div>
+  </li>
   <li class="completed-note" v-if="type === 'completed'">
     <span class="completed-note__title">{{ title }}</span>
     <div class="completed-note__return" @click="$emit('return-to-active', id)">
       <svg 
         width="20px" 
-        height="20px" 
+        height="20px"
         viewBox="0 0 48 48" 
         fill="none" 
         xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +30,7 @@
       <svg 
         width="20px" 
         height="20px" 
-        viewBox="-0.5 0 25 25" 
+        viewBox="-0.5 0 25 25 " 
         fill="none" 
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -101,6 +106,10 @@ export default {
 
 .remove-note::before {
   transform: rotate(-45deg);
+}
+
+.preparatory {
+  opacity: 50%;
 }
 
 .completed-note {

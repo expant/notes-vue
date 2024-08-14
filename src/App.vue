@@ -11,17 +11,15 @@
             :isEmpty="addNoteForm.title.isEmpty"
             :maxLength="addNoteForm.title.maxLength"
             v-model="addNoteForm.title.field"
-
           ></form-field>
           <form-field
             variant="textarea"
             :isEmpty="addNoteForm.description.isEmpty"
             :maxLength="addNoteForm.description.maxLength"
             v-model="addNoteForm.description.field"
-        
           ></form-field>
           <button 
-            class="add-note__btn" 
+            class="add-note__btn"
             type="submit" 
             @click.prevent="validateForm"
             @submit.prevent="validateForm"
@@ -51,10 +49,9 @@
               @remove-note="removeNote"
             ></note-item>
             <note-item 
-              class="preparatory-note"
               v-if="addNoteForm.title.field.trim()"
               :title="addNoteForm.title.field"
-              type="active"
+              type="preparatory"
             ></note-item>
           </ul>
         </div>
@@ -394,10 +391,6 @@ export default {
   gap: 10px;
   margin-top: 30px;
   list-style-type: none;
-}
-
-.preparatory-note {
-  opacity: 50%;
 }
 
 .completed-notes {
