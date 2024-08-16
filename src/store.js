@@ -2,8 +2,20 @@ import { defineStore } from "pinia";
 
 export const useNotesStore = defineStore('notesStore', {
   state: () => ({
-    activeNotes: [],
+    addNoteForm: {
+      title: '',
+      description: '',
+    },
+    notes: {
+      active: [],
+      completed: [],
+    },
   }),
+  getters: {
+    showPreview() {
+      return this.addNoteForm.title;
+    },
+  },
   actions: {
     addNote(title, description) {
       this.$state.activeNotes.push({

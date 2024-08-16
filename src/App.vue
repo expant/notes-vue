@@ -3,96 +3,25 @@
     <div class="side-bar">
       <h1 class="side-bar__title">Список заметок</h1>
       <div class="line"></div>
-      <div class="side-bar__add-note">
-        <h3 class="add-note__title">Добавить заметку</h3>
-        <form class="add-note__form">
-          <input 
-            type="text"
-            placeholder="Название"
-            v-model="addNoteTitle.field"
-          >
-          <textarea 
-            name="description" 
-            placeholder="Описание"
-            v-model="addNoteDescription.field" 
-            cols="30"
-            rows="10"
-          ></textarea>
-          <!-- <form-field
-            variant="input"
-            :isEmpty="addNoteTitle.isEmpty"
-            :maxLength="addNoteForm.title.maxLength"
-            v-model="addNoteForm.title.field"
-          ></form-field>
-          <form-field
-            variant="textarea"
-            :isEmpty="addNoteForm.description.isEmpty"
-            :maxLength="addNoteForm.description.maxLength"
-            v-model="addNoteForm.description.field"
-          ></form-field> -->
-          <button 
-            class="add-note__btn"
-            type="submit" 
-            @click.prevent="validateForm"
-            @submit.prevent="validateForm"
-          >Добавить</button>
-        </form>
-        <div>
-          <span>Title: {{ addNoteTitle.field }}</span>
-          <span>Description: {{ addNoteDescription.field }}</span>
-        </div>
-      </div>
+      <TheAddNoteForm />
     </div>
-    <!-- <div class="right-side">
+    <div class="right-side">
       <div class="search">
         <label for="search">Поиск:</label>
         <input type="text" name="search" placeholder="Найти">
       </div>
       <div class="content">
-        <div class="active-notes notes">
-          <div class="active-notes__count notes-count">Активные: {{ notes.active.length }}</div>
-          <ul class="active-notes__list notes-list">
-            <note-item 
-              v-for="note in notes.active"
-              :key="note.id"
-              :title="note.title"
-              :description="note.description"
-              :id="note.id"
-              type="active"
-              @show-modal="showModal"
-              @remove-note="removeNote"
-            ></note-item>
-            <note-item 
-              v-if="addNoteForm.title.field.trim()"
-              :title="addNoteForm.title.field"
-              type="preparatory"
-            ></note-item>
-          </ul>
-        </div>
-        <div class="completed-notes notes">
-          <div class="completed-notes__count notes-count">Завершённые: {{ notes.completed.length }}</div>
-          <ul class="completed-notes__list notes-list">
-            <note-item
-              v-for="note in notes.completed"
-              :key="note.id"
-              :title="note.title"
-              :description="note.description"
-              :id="note.id"
-              type="completed"
-              @remove-note="removeNote"
-              @return-to-active="returnToActive"
-            ></note-item>
-          </ul>
-        </div>
+        <AppNotes notesType="active" />
+        <AppNotes notesType="completed" />
       </div>
-    </div> -->
+    </div>
   </div>
   <!-- <div class="modal-background" v-if="modal.isVisible">
     <div class="modal-item">
       <h2 class="modal-item__title">{{ modal.title }}</h2>
       <p class="modal-item__description">{{ modal.description }}</p>
       <div class="modal-item__btns">
-        <button class="completed" @click="completeNote(modal.noteId)">Выполнено</button>
+        <button class="completed" @click="completeNote(modal.noteId)">Выполнендо</button>
         <button class="remove" @click="removeNote(modal.noteId, 'active')">Удалить</button>
       </div>
       <div class="close" @click="modal.isVisible = false"></div>
@@ -101,22 +30,10 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import TheAddNoteForm from './components/TheAddNoteForm.vue';
+import AppNotes from './components/AppNotes.vue';
 // import NoteItem from './components/NoteItem.vue';
 // import FormField from './components/FormField.vue';
-
-const addNoteTitle = reactive({
-  field: '',
-  isEmpty: false,
-  maxLength: 30,
-});
-
-const addNoteDescription = reactive({
-  field: '',
-  isEmpty: false,
-  maxLength: 400,
-});
-
 // export default {
 //   data() {
 //     return {
@@ -348,34 +265,6 @@ const addNoteDescription = reactive({
   background: #fff;
 }
 
-
-.add-note__form {
-  display: flex;
-  flex-direction: column;
-}
-
-.add-note__btn,
-.search input {
-  font-size: 16px;
-  border: 0;
-  border-radius: 5px;
-}
-
-.add-note__btn:focus,
-.search input:focus {
-  outline: none;
-}
-
-
-.add-note__btn {
-  width: 114px;
-  font-size: 16px;
-  padding: 12px 18px;
-  background: #ffffff;
-  color: #333333;
-  cursor: pointer;
-}
-
 /* right-side (search) */
 .search {
   display: flex;
@@ -396,40 +285,5 @@ const addNoteDescription = reactive({
   justify-content: space-between;
   gap: 50px;
   padding: 73px 93px;
-}
-
-.notes {
-  flex: 0 0 370px;
-  padding: 30px;
-  border-radius: 10px;
-}
-
-.active-notes {
-  background: #ffffff;
-}
-
-.active-notes__count {
-  color: #455A64;
-}
-
-.notes-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 30px;
-  list-style-type: none;
-}
-
-.completed-notes {
-  background-color: #FFFAFA;
-  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(15px);
-}
-
-.notes-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 30px;
 }
 </style>
