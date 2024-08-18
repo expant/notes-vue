@@ -6,10 +6,7 @@ export const useNotesStore = defineStore('notesStore', {
       title: '',
       description: '',
     },
-    notes: {
-      active: [],
-      completed: [],
-    },
+    notes: [],
   }),
   getters: {
     showPreview() {

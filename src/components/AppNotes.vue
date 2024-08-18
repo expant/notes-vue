@@ -1,17 +1,19 @@
 <template>
   <div :class="`${notesType}-notes notes`">
     <div :class="`${notesType}-notes__count notes-count`">
-      {{ textType }}: {{ notes[notesType].length }}
+      {{ textType }}: {{ getCountByType }}
     </div>
     <ul :class="`${notesType}-notes__list notes-list`">
-      <app-notes-item
+      <!-- <app-notes-item
         v-for="note in notes.active"
         :key="note.id"
         :title="note.title"
         :notesType="notesType"
       ></app-notes-item>
-      <app-notes-item v-if="addNoteForm.title.length > 0"
-      >{{ addNoteForm.title }}</app-notes-item>
+      <app-notes-item 
+        v-if="addNoteForm.title.length > 0"
+        notesType="prep"
+      >{{ addNoteForm.title }}</app-notes-item> -->
       <!-- <note-item 
         v-for="note in notes.active"
         :key="note.id"
@@ -38,7 +40,7 @@ import { storeToRefs } from 'pinia';
 // import AppNotesItem from './AppNotesItem.vue';
 
 const notesStore = useNotesStore();
-const { notes, addNoteForm } = storeToRefs(notesStore);
+const { notes } = storeToRefs(notesStore);
 
 const props = defineProps({
   notesType: {
@@ -48,6 +50,14 @@ const props = defineProps({
       return ['active', 'completed'].includes(value);
     },
   },
+});
+
+const getCountByType = computed(() => {
+  if (notes.length === 0) {
+    return 0;
+  }
+  const { notesType } = props;
+  return notes.value.filter((el) => el.type === notesType).length;
 });
 
 const textType = computed(() => {
