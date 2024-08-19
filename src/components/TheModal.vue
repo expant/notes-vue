@@ -57,6 +57,7 @@ const notesStore = useNotesStore();
 
 .modal-item__title {
   font-weight: 500;
+  color: #1000ff;
 }
 
 .modal-item__description {
@@ -98,22 +99,22 @@ const notesStore = useNotesStore();
 
 .modal-item__btns .completed,
 .modal-item__btns .remove {
-  font-weight: 200;
-  font-size: 20px;
+  font-weight: 400;
+  font-size: 18px;
   padding: 12px 17px;
   border-radius: 5px;
-  border: 1px solid #333333;
+  border: 1px solid #1000ff;
   cursor: pointer;
 }
 
 .modal-item__btns .completed {
   margin-right: 13px;
   color: #ffffff;
-  background: #333333;
+  background: #1000ff;
 }
 
 .modal-item__btns .remove {
-  color: #333333;
+  color: #1000ff;
   background: #ffffff;
 }
 </style>

@@ -2,17 +2,23 @@
   <div class="container">
     <div class="side-bar">
       <h1 class="side-bar__title">Список заметок</h1>
-      <div class="line"></div>
+      <!-- <div class="line"></div> -->
       <TheAddNoteForm />
     </div>
     <div class="right-side">
-      <div class="search">
-        <label for="search">Поиск:</label>
-        <input type="text" name="search" placeholder="Найти">
-      </div>
+      <header class="header">
+        <div class="search">
+          <label for="search">Поиск:</label>
+          <input 
+            v-model="notesStore.searched"
+            type="text" 
+            name="search" 
+            placeholder="Найти"
+          >
+        </div>
+      </header>
       <div class="content">
-        <AppNotes notesType="active" />
-        <AppNotes notesType="completed" />
+        <AppNotes />
         <!-- TODO: Предпросмотр заметки при вводе значения в input (title) -->
       </div>
     </div>
@@ -64,7 +70,12 @@ const notesStore = useNotesStore();
   top: 0;
   flex: 1 0 400px;
   height: 100vh;
-  background: #333333;
+  /* background: #333333; */
+  background: rgb(2,0,36);
+  background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(38,0,255,1) 0%, rgba(0,212,255,1) 100%);
+  border-radius: 10px;
+  box-shadow: 0 0 40px -20px #000;
+  margin: 15px 0 0 15px;
   padding: 30px;
 }
 
@@ -82,34 +93,35 @@ const notesStore = useNotesStore();
   color: #fff;
 }
 
-.line {
+/* .line {
   height: 1px;
   width: 100vw;
   position: absolute;
   top: 85px;
   left: 30px;
   background: #fff;
-}
+} */
 
 /* right-side (search) */
 .search {
   display: flex;
   align-items: center;
-  padding: 20px 90px;
+  max-width: 600px;
+  margin: 15px 0 0 100px;
+  padding: 20px;
+  background: rgb(2,0,36);
+  background: linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(16,0,255,1) 0%, rgba(255,255,255,1) 74%); 
+  border-radius: 10px;
+  color: #fff;
 }
 
 .search input {
   flex: 0 1 400px;
   margin-left: 10px;
   padding: 12px 15px;
-  border: 1px solid #333333;
 }
 
 .content {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
-  gap: 50px;
-  padding: 73px 93px;
+  padding: 35px 100px;
 }
 </style>

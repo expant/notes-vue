@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+// import { defineProps, defineEmits } from 'vue';
 
 const emits = defineEmits(['remove-note', 'show-modal', 'change-note-type']);
 const props = defineProps({
@@ -62,21 +62,30 @@ const props = defineProps({
   display: flex;
   justify-content: space-between;
   width: 300px;
-  background: #ffffff;
-  border: 1px solid #333;
+  /* background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(16,0,255,1) 0%, rgba(238,238,238,1) 78%); */
+  /* border: 1px solid #333; */
+  background: rgb(2,0,36);
+  background: linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(16,0,255,1) 0%, rgba(238,238,238,1) 73%); 
   border-radius: 5px;
+  transform: translateX(0px);
+  transition: all ease-in-out 0.1s;
+}
+
+.notes-item:hover {
+  transform: translateX(-10px);
 }
 
 .notes-item .title {
   display: inline-block;
-  width: 250px;
+  width: 230px;
   font-weight: 200;
   font-size: 16px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 15px;
-  color: #333;
+  color: #fff;
 }
 
 .remove-note {
@@ -85,7 +94,8 @@ const props = defineProps({
   justify-content: center;
   align-items: center;
   width: 50px;
-  background: #333;
+  background: #eee;
+  border-radius: 0 5px 5px 0;
   cursor: pointer;
   transition: transform ease-in 0.1s;
 }
@@ -96,7 +106,7 @@ const props = defineProps({
   position: absolute;
   width: 25px;
   height: 1px;
-  background: #D9D9D9;
+  background: #333;
 }
 
 .remove-note::after {
