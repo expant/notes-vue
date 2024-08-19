@@ -4,31 +4,20 @@
       {{ textType }}: {{ getCountByType }}
     </div>
     <ul :class="`${notesType}-notes__list notes-list`">
-      <!-- <app-notes-item
-        v-for="note in notes.active"
+      <app-notes-item
+        v-for="note in getNotesByType(notesType)"
         :key="note.id"
         :title="note.title"
         :notesType="notesType"
+        @show-modal="notesStore.defineModal(note.id)"
+        @remove-note="notesStore.removeNote(note.id)"
+        @change-note-type="notesStore.changeNoteType(note.id, 'active')"
       ></app-notes-item>
-      <app-notes-item 
-        v-if="addNoteForm.title.length > 0"
-        notesType="prep"
-      >{{ addNoteForm.title }}</app-notes-item> -->
-      <!-- <note-item 
-        v-for="note in notes.active"
-        :key="note.id"
-        :title="note.title"
-        :description="note.description"
-        :id="note.id"
-        type="active"
-        @show-modal="showModal"
-        @remove-note="removeNote"
-      ></note-item> -->
-      <!-- <note-item 
-        v-if="addNoteForm.title.field.trim()"
-        :title="addNoteForm.title.field"
-        type="preparatory"
-      ></note-item> -->
+      <!-- <app-notes-item 
+        :title="notesStore.addNoteForm.title"
+        v-if="(notesType === 'active') && notesStore.addNoteForm.title"
+      >
+      </app-notes-item> -->
     </ul>
   </div>
 </template>
@@ -37,10 +26,10 @@
 import { computed, defineProps } from 'vue';
 import { useNotesStore } from '@/store';
 import { storeToRefs } from 'pinia';
-// import AppNotesItem from './AppNotesItem.vue';
+import AppNotesItem from './AppNotesItem.vue';
 
 const notesStore = useNotesStore();
-const { notes } = storeToRefs(notesStore);
+const { notes, getNotesByType } = storeToRefs(notesStore);
 
 const props = defineProps({
   notesType: {
@@ -74,12 +63,24 @@ const textType = computed(() => {
   border-radius: 10px;
 }
 
+.notes-count {
+  display: inline-block;
+  padding: 10px;
+  border-radius: 5px;
+}
+
 .active-notes {
   background: #ffffff;
 }
 
 .active-notes__count {
-  color: #455A64;
+  color: #333;
+  background: #9ACD32;
+}
+
+.completed-notes__count {
+  color: #fff;
+  background: #80CBC4;
 }
 
 .completed-notes {
@@ -92,7 +93,7 @@ const textType = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 30px;
+  margin-top: 20px;
   list-style-type: none;
 }
 </style>

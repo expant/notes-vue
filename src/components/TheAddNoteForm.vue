@@ -6,7 +6,7 @@
         <input 
           type="text" 
           placeholder="Название"
-          v-model="addNoteForm.title"
+          v-model.trim="addNoteForm.title"
         >
         <!-- <div 
           class="warning-item" 
@@ -20,7 +20,7 @@
           cols="30"
           rows="10" 
           placeholder="Описание"
-          v-model="addNoteForm.description"
+          v-model.trim="addNoteForm.description"
         ></textarea>
         <!-- <div 
           class="warning-item" 
@@ -30,8 +30,8 @@
       <button 
         class="add-note__btn"
         type="submit" 
-        @click.prevent="console.log('Добавить заметку')"
-        @submit.prevent="console.log('Добавить заметку')"
+        @click.prevent="run"
+        @submit.prevent="run"
       >Добавить</button>
     </form>
   </div>
@@ -40,9 +40,27 @@
 <script setup>
 import { useNotesStore } from '@/store';
 import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 
 const notesStore = useNotesStore();
 const { addNoteForm } = storeToRefs(notesStore);
+
+const isFormValid = () => {
+  const { title, description } = addNoteForm.value;
+
+  if (!title || !description) {
+    return false;
+  }
+  return true;
+};
+
+const showWarnings = () => {
+  console.log('Форма не валидна');
+};
+
+const run = computed(() => 
+  isFormValid() ? notesStore.addNote() : showWarnings()
+);
 
 </script>
 

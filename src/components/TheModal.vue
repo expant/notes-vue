@@ -1,0 +1,119 @@
+<template>
+  <div class="modal-background" v-if="notesStore.modal.isVisible">
+    <div class="modal-item">
+      <h2 class="modal-item__title">{{ notesStore.modal.title }}</h2>
+      <p class="modal-item__description">{{ notesStore.modal.description }}</p>
+      <div class="modal-item__btns">
+        <button 
+          class="completed" 
+          @click="notesStore.changeNoteType(notesStore.modal.noteId, 'completed')"
+        >Выполнено</button>
+        <button 
+          class="remove" 
+          @click="notesStore.removeNote(notesStore.modal.noteId)"
+        >Удалить</button>
+      </div>
+      <div class="close" @click="notesStore.modal.isVisible = false"></div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { useNotesStore } from '@/store';
+const notesStore = useNotesStore();
+</script>
+
+<style scoped> 
+.modal-background {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(51, 51, 51, 0.7);
+  z-index: 1;
+}
+
+.modal-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 600px;
+  height: 495px;
+  padding: 30px 40px;
+  background: #ffffff;
+  border-radius: 20px;
+  z-index: 2;
+}
+
+.modal-item__title,
+.modal-item__description {
+  font-size: 20px;
+}
+
+.modal-item__title {
+  font-weight: 500;
+}
+
+.modal-item__description {
+  font-weight: 200;
+  word-wrap: break-word;
+}
+
+.modal-item .close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+
+.modal-item .close::after,
+.modal-item .close::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  width: 25px;
+  height: 1px;
+  background: #333333;
+  cursor: pointer;
+}
+
+.modal-item .close::after {
+  transform: rotate(45deg);
+}
+
+.modal-item .close::before {
+  transform: rotate(-45deg);
+}
+
+.modal-item__btns {
+  margin-top: auto;
+}
+
+.modal-item__btns .completed,
+.modal-item__btns .remove {
+  font-weight: 200;
+  font-size: 20px;
+  padding: 12px 17px;
+  border-radius: 5px;
+  border: 1px solid #333333;
+  cursor: pointer;
+}
+
+.modal-item__btns .completed {
+  margin-right: 13px;
+  color: #ffffff;
+  background: #333333;
+}
+
+.modal-item__btns .remove {
+  color: #333333;
+  background: #ffffff;
+}
+</style>
