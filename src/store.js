@@ -111,11 +111,11 @@ export const useNotesStore = defineStore('notesStore', {
     showPreview() {
       return this.addNoteForm.title;
     },
-    getNotesByType: (state) => {
-      return (notesType) => state.notes.filter((el) => el.type === notesType);
-    },
+    // getNotesByType() {
+    //   return this.notes.filter((el) => el.type === this.currentType);
+    // },
     getSearchNotes() {
-      const notesByType = this.getNotesByType(this.currentType);
+      const notesByType = this.notes.filter((el) => el.type === this.currentType);
       return notesByType.filter((el) => el.title.includes(this.searched));
     },
   },

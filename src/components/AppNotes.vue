@@ -12,11 +12,10 @@
     >
     </app-notes-type-btn>
   </div>
-  <div>{{ searched }}</div>
   <div :class="`${currentType}-notes notes`">
     <ul :class="`${currentType}-notes__list notes-list`">
       <app-notes-item
-        v-for="note in isSearched()"
+        v-for="note in getSearchNotes"
         :key="note.id"
         :title="note.title"
         :notesType="currentType"
@@ -34,26 +33,13 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
 import { useNotesStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import AppNotesItem from './AppNotesItem.vue';
 import AppNotesTypeBtn from './AppNotesTypeBtn.vue';
 
 const notesStore = useNotesStore();
-const { 
-  getNotesByType, 
-  currentType, 
-  getSearchNotes,
-  searched,
-} = storeToRefs(notesStore);
-
-const isSearched = () => computed(() => {
-  if (!searched.value) {
-    return getNotesByType(currentType);
-  }
-  return getSearchNotes();
-});
+const { currentType, getSearchNotes } = storeToRefs(notesStore);
 </script>
 
 <style scoped>

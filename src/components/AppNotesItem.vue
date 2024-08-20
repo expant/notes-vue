@@ -1,5 +1,5 @@
 <template>
-  <li class="notes-item" v-if="notesType === 'active'">
+  <li class="notes-item note" v-if="notesType === 'active'">
     <span class="title" @click="$emit('show-modal')">{{ title }}</span>
     <div class="remove-note" @click="$emit('remove-note')">
     </div>
@@ -9,7 +9,7 @@
     <div class="remove-note">
     </div>
   </li> -->
-  <li class="completed-note" v-if="notesType === 'completed'">
+  <li class="completed-note note" v-if="notesType === 'completed'">
     <span class="completed-note__title">{{ title }}</span>
     <div class="completed-note__return" @click="$emit('change-note-type')">
       <svg 
@@ -42,8 +42,6 @@
 </template>
 
 <script setup>
-// import { defineProps, defineEmits } from 'vue';
-
 const emits = defineEmits(['remove-note', 'show-modal', 'change-note-type']);
 const props = defineProps({
   notesType: {
@@ -58,6 +56,23 @@ const props = defineProps({
 </script>
 
 <style scoped>
+.note {
+  opacity: 0;
+  transition: 0.5s;
+  animation: show-note 0.5s 1;
+  animation-fill-mode: forwards;
+  animation-delay: 0s;
+}
+
+@keyframes show-note {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .notes-item {
   display: flex;
   justify-content: space-between;
@@ -79,7 +94,7 @@ const props = defineProps({
 .notes-item .title {
   display: inline-block;
   width: 230px;
-  font-weight: 200;
+  font-weight: 400;
   font-size: 16px;
   white-space: nowrap;
   overflow: hidden;

@@ -7,11 +7,11 @@
     </div>
     <div class="right-side">
       <header class="header">
-        <div class="search">
+        <div class="search" role="search">
           <label for="search">Поиск:</label>
           <input 
-            v-model="notesStore.searched"
-            type="text" 
+            v-model.trim="notesStore.searched"
+            type="search" 
             name="search" 
             placeholder="Найти"
           >
