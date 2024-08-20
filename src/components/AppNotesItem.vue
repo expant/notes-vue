@@ -88,7 +88,7 @@ const props = defineProps({
 }
 
 .notes-item:hover {
-  transform: translateX(-10px);
+  transform: translateX(-5px);
 }
 
 .notes-item .title {

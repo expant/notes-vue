@@ -3,16 +3,19 @@
     <div class="modal-item">
       <h2 class="modal-item__title">{{ notesStore.modal.title }}</h2>
       <p class="modal-item__description">{{ notesStore.modal.description }}</p>
-      <div class="modal-item__btns">
-        <button 
-          class="completed" 
-          @click="notesStore.changeNoteType(notesStore.modal.noteId, 'completed')"
-        >Выполнено</button>
-        <button 
-          class="remove" 
-          @click="notesStore.removeNote(notesStore.modal.noteId)"
-        >Удалить</button>
-      </div>
+      <footer class="modal-item__footer">
+        <div class="modal-item__btns">
+          <button 
+            class="completed" 
+            @click="notesStore.changeNoteType(notesStore.modal.noteId, 'completed')"
+          >Выполнено</button>
+          <button 
+            class="remove" 
+            @click="notesStore.removeNote(notesStore.modal.noteId)"
+          >Удалить</button>
+        </div>
+        <div class="modal-item__date">{{ notesStore.modal.date }}</div>
+      </footer>
       <div class="close" @click="notesStore.modal.isVisible = false"></div>
     </div>
   </div>
@@ -48,6 +51,20 @@ const notesStore = useNotesStore();
   background: #ffffff;
   border-radius: 20px;
   z-index: 2;
+  transform: scale(0);
+  transition: 0.3s;
+  animation: show-modal 0.3s 1;
+  animation-fill-mode: forwards;
+  animation-delay: 0s;
+}
+
+@keyframes show-modal {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .modal-item__title,
@@ -93,6 +110,13 @@ const notesStore = useNotesStore();
   transform: rotate(-45deg);
 }
 
+.modal-item__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: auto;
+}
+
 .modal-item__btns {
   margin-top: auto;
 }
@@ -116,5 +140,9 @@ const notesStore = useNotesStore();
 .modal-item__btns .remove {
   color: #1000ff;
   background: #ffffff;
+}
+
+.modal-item__date {
+  color: #80CBC4;
 }
 </style>

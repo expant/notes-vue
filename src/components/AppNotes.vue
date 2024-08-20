@@ -1,16 +1,12 @@
 <template>
   <div class="notes-type-btns">
     <app-notes-type-btn
-      notesType="active"
+      v-for="type in types"
+      :key="type"
+      :notesType="type"
       :currentType="currentType"
-      @switch-type="currentType = 'active'"
+      @switch-type="currentType = type"
     ></app-notes-type-btn>
-    <app-notes-type-btn
-      notes-type="completed"
-      :currentType="currentType"
-      @switch-type="currentType = 'completed'"
-    >
-    </app-notes-type-btn>
   </div>
   <div :class="`${currentType}-notes notes`">
     <ul :class="`${currentType}-notes__list notes-list`">
@@ -40,6 +36,7 @@ import AppNotesTypeBtn from './AppNotesTypeBtn.vue';
 
 const notesStore = useNotesStore();
 const { currentType, getSearchNotes } = storeToRefs(notesStore);
+const types = ['active', 'completed'];
 </script>
 
 <style scoped>
