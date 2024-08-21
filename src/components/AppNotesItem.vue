@@ -1,5 +1,5 @@
 <template>
-  <li class="notes-item note" v-if="notesType === 'active'">
+  <li class="notes-item note">
     <span class="title" @click="$emit('show-modal')">{{ title }}</span>
     <div class="remove-note" @click="$emit('remove-note')">
     </div>
@@ -9,7 +9,7 @@
     <div class="remove-note">
     </div>
   </li> -->
-  <li class="completed-note note" v-if="notesType === 'completed'">
+  <!-- <li class="completed-note note" v-if="notesType === 'completed'">
     <span class="completed-note__title">{{ title }}</span>
     <div class="completed-note__return" @click="$emit('change-note-type')">
       <svg 
@@ -38,16 +38,16 @@
         <path d="M3 3.32001L21 21.32" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
-  </li>
+  </li> -->
 </template>
 
 <script setup>
 const emits = defineEmits(['remove-note', 'show-modal', 'change-note-type']);
 const props = defineProps({
-  notesType: {
-    type: String,
-    default: 'prep',
-  },
+  // notesType: {
+  //   type: String,
+  //   default: 'prep',
+  // },
   title: {
     type: String,
     required: true,

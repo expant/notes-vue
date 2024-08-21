@@ -1,20 +1,19 @@
 <template>
   <div class="notes-type-btns">
     <app-notes-type-btn
-      v-for="type in types"
+      v-for="type in types.all"
       :key="type"
       :notesType="type"
-      :currentType="currentType"
-      @switch-type="currentType = type"
+      :currentType="types.current"
+      @switch-type="types.current = type"
     ></app-notes-type-btn>
   </div>
-  <div :class="`${currentType}-notes notes`">
-    <ul :class="`${currentType}-notes__list notes-list`">
+  <div :class="`${types.current}-notes notes`">
+    <ul :class="`${types.current}-notes__list notes-list`">
       <app-notes-item
         v-for="note in getSearchNotes"
         :key="note.id"
         :title="note.title"
-        :notesType="currentType"
         @show-modal="notesStore.defineModal(note.id)"
         @remove-note="notesStore.removeNote(note.id)"
         @change-note-type="notesStore.changeNoteType(note.id, 'active')"
@@ -35,8 +34,7 @@ import AppNotesItem from './AppNotesItem.vue';
 import AppNotesTypeBtn from './AppNotesTypeBtn.vue';
 
 const notesStore = useNotesStore();
-const { currentType, getSearchNotes } = storeToRefs(notesStore);
-const types = ['active', 'completed'];
+const { types, getSearchNotes } = storeToRefs(notesStore);
 </script>
 
 <style scoped>

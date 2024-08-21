@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "moment": "^2.30.1",
     "pinia": "^2.2.1",
     "vue": "^3.4.29"
   },

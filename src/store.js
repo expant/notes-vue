@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import moment from "moment";
 
 export const useNotesStore = defineStore('notesStore', {
   state: () => ({
@@ -7,7 +6,10 @@ export const useNotesStore = defineStore('notesStore', {
       title: '',
       description: '',
     },
-    currentType: 'active',
+    types: {
+      current: 'active',
+      all: ['active', 'completed'],
+    },
     searched: '',
     notes: [
       { 
@@ -121,7 +123,6 @@ export const useNotesStore = defineStore('notesStore', {
       noteId: null,
       title: '',
       description: '',
-      date: '',
     },
   }),
   getters: {
@@ -132,28 +133,24 @@ export const useNotesStore = defineStore('notesStore', {
     //   return this.notes.filter((el) => el.type === this.currentType);
     // },
     getSearchNotes() {
-      const notesByType = this.notes.filter((el) => el.type === this.currentType);
+      const notesByType = this.notes.filter((el) => el.type === this.types.current);
       return notesByType.filter((el) => el.title.includes(this.searched));
     },
   },
   actions: {
     addNote() {
       const { title, description } = this.addNoteForm;
-      const dateInstance = new Date();
-      const date = `${moment().locale('ru').format('L')} ${moment().locale('ru').format('LT')}`
-      // const { getDay, getMonth, getFullYear, getHours, getMinutes } = dateInstance;
-      // const date = `${getDay()}.${getMonth()}.${getFullYear()} ${getHours()}:${getMinutes()}`;
-      const id = dateInstance.valueOf();
-
       this.notes.push({
         title,
         description,
-        id,
-        date,
+        id: new Date().valueOf(),
         type: 'active',
       });
       this.addNoteForm.title = '';
       this.addNoteForm.description = '';
+    },
+    addNotesType(typeName) {
+      this.types.all.push(typeName);
     },
     removeNote(id) {
       if (this.modal.isVisible) {

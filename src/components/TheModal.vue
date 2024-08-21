@@ -14,7 +14,6 @@
             @click="notesStore.removeNote(notesStore.modal.noteId)"
           >Удалить</button>
         </div>
-        <div class="modal-item__date">{{ notesStore.modal.date }}</div>
       </footer>
       <div class="close" @click="notesStore.modal.isVisible = false"></div>
     </div>
@@ -140,9 +139,5 @@ const notesStore = useNotesStore();
 .modal-item__btns .remove {
   color: #1000ff;
   background: #ffffff;
-}
-
-.modal-item__date {
-  color: #80CBC4;
 }
 </style>
