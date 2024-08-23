@@ -8,8 +8,8 @@ export const useNotesStore = defineStore('notesStore', {
     },
     types: {
       isFormVisible: false,
-      current: 'Активные',
-      all: ['Активные', 'Завершённые'],
+      current: 'Все',
+      all: ['Все'],
     },
     searched: '',
     notes: [
@@ -119,6 +119,10 @@ export const useNotesStore = defineStore('notesStore', {
     //   return this.notes.filter((el) => el.type === this.currentType);
     // },
     getSearchNotes() {
+      if (this.types.current === this.types.all[0]) {
+        return this.notes.filter((el) => el.title.includes(this.searched))
+      }
+
       const notesByType = this.notes.filter((el) => el.type === this.types.current);
       return notesByType.filter((el) => el.title.includes(this.searched));
     },

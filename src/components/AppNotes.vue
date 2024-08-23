@@ -21,6 +21,7 @@
           @change="handleNewType($event)"
         >
       </transition>
+      <span v-if="isTypeExist" class="exist">Тип с таким именем уже существует</span>
     </div>
   </div>
   <div :class="`${types.current}-notes notes`">
@@ -51,8 +52,15 @@ import AppNotesTypeBtn from './AppNotesTypeBtn.vue';
 const notesStore = useNotesStore();
 const { types, getSearchNotes } = storeToRefs(notesStore);
 const newTypeName = ref('');
+const isTypeExist = ref(false);
 
 const handleNewType = (event) => {
+  if (types.includes(event.target.value)) {
+    isTypeExist = true;
+    return;
+  }
+
+  isTypeExist = false;
   notesStore.addNotesType(event.target.value);
   event.target.value = '';
 };
@@ -66,22 +74,40 @@ const handleNewType = (event) => {
 }
 
 .notes-type-btns__new {
+  position: relative;
   display: flex;
   gap: 5px;
+}
+
+.notes-type-btns__new .exist {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  font-size: 14px;
+  color: #F44336;
 }
 
 .notes-type-btns__new input {
   padding: 5px 10px;
   border: 1px solid #80CBC4;
   color: #333;
-  transition: 0.2s;
+  /* transition: 0.2s;
   animation: show-new-type-input 0.2s 1;
   animation-fill-mode: forwards;
-  animation-delay: 0s;
-
+  animation-delay: 0s; */
 }
 
-@keyframes show-new-type-input {
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* @keyframes show-new-type-input {
   0% {
     opacity: 0;
     width: 0;
@@ -90,7 +116,7 @@ const handleNewType = (event) => {
     opacity: 1;
     width: 100%;
   }
-}
+} */
 
 .notes {
   flex: 0 0 370px;
