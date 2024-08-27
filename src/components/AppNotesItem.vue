@@ -1,23 +1,47 @@
 <template>
-  <li class="notes-item note">
+  <li 
+    class="notes-item note animation" 
+    v-if="type === 'added'"
+    @mouseover="$emit('show-content')"
+  >
     <span class="title" @click="$emit('show-modal')">{{ title }}</span>
-    <div class="remove-note" @click="$emit('remove-note')">
-    </div>
+    <div class="remove-note" @click="$emit('remove-note')"></div>
+  </li>
+  <li class="notes-new-item note" v-if="type === 'new'">
+    <span class="title">Добавить заметку</span>
   </li>
 </template>
 
 <script setup>
-const emits = defineEmits(['remove-note', 'show-modal']);
+const emits = defineEmits([
+  'remove-note', 
+  'show-modal',
+  'show-content',
+  'hide-content',
+]);
 const props = defineProps({
   title: {
     type: String,
     required: true,
   },
+  type: {
+    type: String,
+    required: true,
+  }
 });
 </script>
 
 <style scoped>
 .note {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.title {
+  padding: 15px;
+}
+
+.animation {
   opacity: 0;
   transition: 0.5s;
   animation: show-note 0.5s 1;
@@ -37,13 +61,8 @@ const props = defineProps({
 .notes-item {
   display: flex;
   justify-content: space-between;
-  width: 300px;
-  /* background: rgb(2,0,36);
-  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(16,0,255,1) 0%, rgba(238,238,238,1) 78%); */
-  /* border: 1px solid #333; */
   background: rgb(2,0,36);
   background: linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(16,0,255,1) 0%, rgba(238,238,238,1) 73%); 
-  border-radius: 5px;
   transform: translateX(0px);
   transition: all ease-in-out 0.1s;
 }
@@ -60,7 +79,6 @@ const props = defineProps({
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 15px;
   color: #fff;
 }
 
@@ -93,61 +111,17 @@ const props = defineProps({
   transform: rotate(-45deg);
 }
 
-.prep {
-  opacity: 50%;
+.notes-new-item {
+  padding: 15px;
+  color: #968ff5;
+  background: #fff;
+  border: 1px solid #968ff5;
+  transition: all 0.1s ease;
 }
 
-.completed-note {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  width: 300px;
-  list-style-type: none;
-  border: 1px solid #eeeeee;
-  border-radius: 5px;
-  transition: all ease-in 0.1s;
-}
-
-.completed-note:hover {
-  background: #eeeeee;
-}
-
-.completed-note__title,
-.completed-note__return,
-.completed-note__remove {
-  padding: 10px;
-}
-
-.completed-note__return,
-.completed-note__remove  {
-  background: #eeeeee;
-}
-
-.completed-note__title {
-  flex: 0 0 200px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-right: auto;
-}
-
-.completed-note__return,
-.completed-note__remove {
-  transition: background ease-out 0.1s;
-}
-
-.completed-note__remove {
-  border-radius: 0 5px 5px 0;
-}
-
-.completed-note__return:hover {
-  cursor: pointer;
-  background: #9ACD32;
-}
-
-.completed-note__remove:hover {
-  cursor: pointer;
-  background: #FF0000;
+.notes-new-item:hover {
+  background: #968ff5;
+  color: #ffffff;
 }
 
 </style>

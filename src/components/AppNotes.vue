@@ -1,128 +1,59 @@
 <template>
-  <div class="notes-type-btns">
-    <app-notes-type-btn
-      v-for="type in types.all"
-      :key="type"
-      :notesType="type"
-      :currentType="types.current"
-      btnType="available"
-      @switch-type="types.current = type"
-    ></app-notes-type-btn>
-    <div class="notes-type-btns__new">
-      <app-notes-type-btn btnType="new"></app-notes-type-btn>
-      <transition name="fade">
-        <input
-          type="text"
-          name="new-type"
-          id="new-type"
-          placeholder="Название типа"
-          :class="types.isFormVisible ? 'active' : 'hidden'"
-          v-if="types.isFormVisible"
-          @change="handleNewType($event)"
+  <div class="notes">
+    <div class="notes_flex">
+      <div class="notes__wrap">
+        <div class="notes__count">{{ getNotes.length }}</div>
+        <button 
+          class="notes__control"
+          @click="controlMenu.active = !controlMenu.active"
         >
-      </transition>
-      <span v-if="isTypeExist" class="exist">Тип с таким именем уже существует</span>
+          <AppThreeDots :class="controlMenu.active ? 'active' : ''"/>
+          <AppControlMenu v-show="controlMenu.active" />
+        </button>
+      </div>
+      <ul class="notes-list">
+        <app-notes-item
+          v-for="note in getNotes"
+          :key="note.id"
+          :title="note.title"
+          type="added"
+          @show-modal="notesStore.defineModal(note.id)"
+          @remove-note="notesStore.removeNote(note.id)"
+          @show-content="showNoteContent(note.id)"
+        ></app-notes-item>
+        <button class="notes-new">
+          <app-notes-item type="new"></app-notes-item>
+        </button>
+      </ul>
     </div>
-  </div>
-  <div :class="`${types.current}-notes notes`">
-    <ul :class="`${types.current}-notes__list notes-list`">
-      <app-notes-item 
-        v-for="note in getSearchNotes"
-        :key="note.id"
-        :title="note.title"
-        @show-modal="notesStore.defineModal(note.id)"
-        @remove-note="notesStore.removeNote(note.id)"
-      ></app-notes-item>
-      <!-- <app-notes-item 
-        :title="notesStore.addNoteForm.title"
-        v-if="(notesType === 'active') && notesStore.addNoteForm.title"
-      >
-      </app-notes-item> -->
-    </ul>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { useNotesStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import AppNotesItem from './AppNotesItem.vue';
-import AppNotesTypeBtn from './AppNotesTypeBtn.vue';
+import AppThreeDots from './AppThreeDots.vue';
+import AppControlMenu from './AppControlMenu.vue';
 
 const notesStore = useNotesStore();
-const { types, getSearchNotes } = storeToRefs(notesStore);
-const newTypeName = ref('');
-const isTypeExist = ref(false);
+const { getNotes, currentNote } = storeToRefs(notesStore);
 
-const handleNewType = (event) => {
-  if (types.includes(event.target.value)) {
-    isTypeExist = true;
-    return;
-  }
+const controlMenu = reactive({ active: false });
 
-  isTypeExist = false;
-  notesStore.addNotesType(event.target.value);
-  event.target.value = '';
-};
+const showNoteContent = (id) => {
+  notesStore.currentNote.active = true;
+  notesStore.currentNote.id = id;
+}
 </script>
 
 <style scoped>
-.notes-type-btns {
-  display: flex;
-  flex-flow: row wrap;
-  gap: 10px;
-}
-
-.notes-type-btns__new {
-  position: relative;
-  display: flex;
-  gap: 5px;
-}
-
-.notes-type-btns__new .exist {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  font-size: 14px;
-  color: #F44336;
-}
-
-.notes-type-btns__new input {
-  padding: 5px 10px;
-  border: 1px solid #80CBC4;
-  color: #333;
-  /* transition: 0.2s;
-  animation: show-new-type-input 0.2s 1;
-  animation-fill-mode: forwards;
-  animation-delay: 0s; */
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-/* @keyframes show-new-type-input {
-  0% {
-    opacity: 0;
-    width: 0;
-  }
-  100% {
-    opacity: 1;
-    width: 100%;
-  }
-} */
-
 .notes {
-  flex: 0 0 370px;
-  display: inline-block;
-  margin-top: 30px;
-  padding: 0 30px 0 30px;
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+  gap: 100px;
   border-radius: 10px;
 }
 
@@ -137,4 +68,30 @@ const handleNewType = (event) => {
   margin-top: 20px;
   list-style-type: none;
 }
+
+.notes__count {
+  font-size: 30px;
+  font-weight: 800;
+  color: #968ff5;
+}
+
+.notes__wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notes__control {
+  position: relative;
+}
+
+.notes__control .active {
+  background: #eee;
+}
+
+.notes_flex {
+  flex-shrink: 0;
+  width: 100%;
+}
+
 </style>

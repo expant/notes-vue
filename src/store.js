@@ -104,6 +104,10 @@ export const useNotesStore = defineStore('notesStore', {
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
       },
     ],
+    currentNote: {
+      active: false,
+      id: null,
+    },
     modal: {
       isVisible: false,
       noteId: null,
@@ -115,16 +119,18 @@ export const useNotesStore = defineStore('notesStore', {
     showPreview() {
       return this.addNoteForm.title;
     },
-    // getNotesByType() {
-    //   return this.notes.filter((el) => el.type === this.currentType);
-    // },
-    getSearchNotes() {
+    getSearchNotes: (state) => {
+      return (notes = state.notes) => notes.filter((el) => el.title.includes(state.searched))
+    },
+    getNotes() {
       if (this.types.current === this.types.all[0]) {
-        return this.notes.filter((el) => el.title.includes(this.searched))
+        return this.getSearchNotes();
       }
-
       const notesByType = this.notes.filter((el) => el.type === this.types.current);
-      return notesByType.filter((el) => el.title.includes(this.searched));
+      return this.getSearchNotes(notesByType);
+    },
+    getNoteById: (state) => {
+      return (id) => state.notes.find((el) => el.id === id);
     },
   },
   actions: {
@@ -134,7 +140,7 @@ export const useNotesStore = defineStore('notesStore', {
         title,
         description,
         id: new Date().valueOf(),
-        type: 'Активные',
+        type: this.types.current,
       });
       this.addNoteForm.title = '';
       this.addNoteForm.description = '';
@@ -148,6 +154,19 @@ export const useNotesStore = defineStore('notesStore', {
         this.modal.isVisible = false;
       }
       this.notes = this.notes.filter((el) => el.id !== id);
+    },
+    removeAllNotesByType() {
+      if (this.types.current === this.types.all[0]) {
+        this.notes = [];
+        return;
+      }
+
+      this.notes = this.notes.filter((el) => el.type !== this.types.current);
+    },
+    removeCurrentType() {
+      const index = this.types.all.indexOf(this.types.current);
+      this.types.all.splice(index, 1);
+      this.types.current = this.types.all[0];
     },
     defineModal(id) {
       const note = this.notes.find((el) => el.id === id);
@@ -163,6 +182,7 @@ export const useNotesStore = defineStore('notesStore', {
       }
       this.notes = this.notes
         .map((el) => el.id === id ? { ...el, type: newType } : el);
+      this.currentNote.active = false;
     },
   }
 });

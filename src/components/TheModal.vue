@@ -1,14 +1,10 @@
 <template>
-  <div class="modal-background" v-if="notesStore.modal.isVisible">
+  <div class="modal-wrap">
     <div class="modal-item">
       <h2 class="modal-item__title">{{ notesStore.modal.title }}</h2>
       <p class="modal-item__description">{{ notesStore.modal.description }}</p>
       <footer class="modal-item__footer">
         <div class="modal-item__btns">
-          <button 
-            class="completed" 
-            @click="notesStore.changeNoteType(notesStore.modal.noteId, 'completed')"
-          >Выполнено</button>
           <button 
             class="remove" 
             @click="notesStore.removeNote(notesStore.modal.noteId)"
@@ -26,17 +22,12 @@ const notesStore = useNotesStore();
 </script>
 
 <style scoped> 
-.modal-background {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+.modal-wrap {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(51, 51, 51, 0.7);
-  z-index: 1;
 }
 
 .modal-item {

@@ -4,7 +4,7 @@
     :class="`${currentType === notesType ? 'current' : ''} notes-count`"
     @click="$emit('switch-type', notesType)"
   >
-    {{ notesType }}: {{ getCountByType }}
+    {{ notesType }}
   </button>
   <button 
     v-if="btnType === 'new'"
@@ -14,15 +14,13 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useNotesStore } from '@/store';
 
 const notesStore = useNotesStore();
-const { notes, types } = storeToRefs(notesStore);
+const { types } = storeToRefs(notesStore);
 
 const emits = defineEmits(['switch-type']);
-
 const props = defineProps({
   notesType: {
     type: String,
@@ -35,14 +33,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-});
-
-const getCountByType = computed(() => {
-  if (notes.length === 0) {
-    return 0;
-  }
-  const { notesType } = props;
-  return notes.value.filter((el) => el.type === notesType).length;
 });
 </script>
 
