@@ -6,7 +6,7 @@
       :notesType="type"
       :currentType="types.current"
       btnType="available"
-      @switch-type="types.current = type"
+      @switch-type="switchType"
     ></app-notes-type-btn>
     <div class="notes-type-btns__new">
       <app-notes-type-btn btnType="new"></app-notes-type-btn>
@@ -33,7 +33,7 @@ import { storeToRefs } from 'pinia';
 import { reactive } from 'vue';
 
 const notesStore = useNotesStore();
-const { types } = storeToRefs(notesStore);
+const { types, controlMenu } = storeToRefs(notesStore);
 const typesState = reactive({
   newTypeName: '',
   isTypeExist: false,
@@ -48,6 +48,11 @@ const handleNewType = (event) => {
   typesState.isTypeExist = false;
   notesStore.addNotesType(event.target.value);
   event.target.value = '';
+};
+
+const switchType = (type) => {
+  types.value.current = type;
+  controlMenu.value.active = false;
 };
 </script>
 

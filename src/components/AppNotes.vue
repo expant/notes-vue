@@ -8,7 +8,9 @@
           @click="controlMenu.active = !controlMenu.active"
         >
           <AppThreeDots :class="controlMenu.active ? 'active' : ''"/>
-          <AppControlMenu v-show="controlMenu.active" />
+          <transition name="appearance">
+            <AppControlMenu v-show="controlMenu.active" />
+          </transition>
         </button>
       </div>
       <ul class="notes-list">
@@ -38,9 +40,7 @@ import AppThreeDots from './AppThreeDots.vue';
 import AppControlMenu from './AppControlMenu.vue';
 
 const notesStore = useNotesStore();
-const { getNotes, currentNote } = storeToRefs(notesStore);
-
-const controlMenu = reactive({ active: false });
+const { getNotes, currentNote, controlMenu } = storeToRefs(notesStore);
 
 const showNoteContent = (id) => {
   notesStore.currentNote.active = true;
@@ -94,4 +94,20 @@ const showNoteContent = (id) => {
   width: 100%;
 }
 
+.appearance-enter-active,
+.appearance-leave-active {
+  transition: all 0.2s ease;
+}
+
+.appearance-enter-from,
+.appearance-leave-to {
+  transform: translateY(-100px);
+  opacity: 0;
+}
+
+.appearance-enter-to,
+.appearance-leave-from {
+  transform: translateY(0);
+  opacity: 1;
+}
 </style>

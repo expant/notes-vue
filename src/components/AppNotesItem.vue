@@ -113,14 +113,14 @@ const props = defineProps({
 
 .notes-new-item {
   padding: 15px;
-  color: #968ff5;
+  color: #2a1cfd;
   background: #fff;
-  border: 1px solid #968ff5;
+  border: 1px solid #2a1cfd;
   transition: all 0.1s ease;
 }
 
 .notes-new-item:hover {
-  background: #968ff5;
+  background: #2a1cfd;
   color: #ffffff;
 }
 

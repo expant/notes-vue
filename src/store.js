@@ -114,6 +114,9 @@ export const useNotesStore = defineStore('notesStore', {
       title: '',
       description: '',
     },
+    controlMenu: {
+      active: false,
+    },
   }),
   getters: {
     showPreview() {
@@ -183,6 +186,7 @@ export const useNotesStore = defineStore('notesStore', {
       this.notes = this.notes
         .map((el) => el.id === id ? { ...el, type: newType } : el);
       this.currentNote.active = false;
+      this.controlMenu.active = false;
     },
   }
 });
