@@ -27,7 +27,7 @@ const note = notesStore.getNoteById(props.noteId);
   background: linear-gradient(
     135deg, rgba(2,0,36,1) 0%, 
     rgba(16,0,255,1) 0%, 
-    rgba(238,238,238,1) 80%);
+    rgba(238,238,238,1) 100%);
   border-radius: 5px;
   color: #ffffff;
 }

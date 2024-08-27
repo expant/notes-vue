@@ -10,6 +10,7 @@
       v-if="notesStore.types.current !== notesStore.types.all[0]"
       @click="notesStore.removeCurrentType"
     >Удалить тип</button>
+    <div class="pointer"></div>
   </div>
 </template>
 
@@ -24,14 +25,27 @@ const notesStore = useNotesStore();
 .control-menu {
   position: absolute;
   width: 250px;
-  left: 50px;
+  left: 45px;
   top: 0;
   background:#eee;
   border-radius: 5px;
+  z-index: 10;
+}
+
+.pointer {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  left: -5px;
+  top: 12px;
+  transform: rotate(45deg);
+  background:#eee;
+  transition: all 0.1s ease;
 }
 
 .control-menu__item {
   width: 100%;
+  font-size: 16px;
   padding: 10px 20px;
   background: transparent;
   color: #333;
@@ -39,9 +53,9 @@ const notesStore = useNotesStore();
   border-radius: inherit;
 }
 
-.control-menu__item:hover {
-  background: linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(16,0,255,1) 0%, rgba(238,238,238,1) 90%);;
-  color: #fff;
+.control-menu__item:hover,
+.control-menu__item:hover:first-child ~ .pointer {
+  background: #E0E0E0;
 }
 
 </style>
