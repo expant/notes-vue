@@ -33,7 +33,7 @@ import { storeToRefs } from 'pinia';
 import { reactive } from 'vue';
 
 const notesStore = useNotesStore();
-const { types, controlMenu } = storeToRefs(notesStore);
+const { types, controlMenu, currentNote } = storeToRefs(notesStore);
 const typesState = reactive({
   newTypeName: '',
   isTypeExist: false,
@@ -52,6 +52,7 @@ const handleNewType = (event) => {
 
 const switchType = (type) => {
   types.value.current = type;
+  currentNote.value.active = false;
   controlMenu.value.active = false;
 };
 </script>

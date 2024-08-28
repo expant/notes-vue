@@ -1,11 +1,6 @@
 <template>
 	<div class="add-note__title" v-if="variant === 'input'">
-		<input 
-			type="text" 
-			placeholder="Название"
-			:value="modelValue"
-    	@input="returnData($event)"
-		>
+		
 		<div 
 			class="warning-item" 
 			v-if="isEmpty || compareLength(maxLength)"

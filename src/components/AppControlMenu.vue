@@ -1,6 +1,6 @@
 <template>
   <div class="control-menu">
-    <button class="control-menu__item">Добавить заметку</button>
+    <button class="control-menu__item" @click="notesStore.form.isVisible = true">Добавить заметку</button>
     <button 
       class="control-menu__item"
       @click="notesStore.removeAllNotesByType"

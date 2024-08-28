@@ -108,7 +108,7 @@ export const useNotesStore = defineStore('notesStore', {
       active: false,
       id: null,
     },
-    modal: {
+    form: {
       isVisible: false,
       noteId: null,
       title: '',
@@ -147,16 +147,15 @@ export const useNotesStore = defineStore('notesStore', {
       });
       this.addNoteForm.title = '';
       this.addNoteForm.description = '';
+      this.form.isVisible = false;
     },
     addNotesType(typeName) {
       this.types.all.push(typeName);
       this.types.isFormVisible = false;
     },
     removeNote(id) {
-      if (this.modal.isVisible) {
-        this.modal.isVisible = false;
-      }
       this.notes = this.notes.filter((el) => el.id !== id);
+      this.currentNote.active = false;
     },
     removeAllNotesByType() {
       if (this.types.current === this.types.all[0]) {
@@ -173,15 +172,15 @@ export const useNotesStore = defineStore('notesStore', {
     },
     defineModal(id) {
       const note = this.notes.find((el) => el.id === id);
-      this.modal.noteId = id;
-      this.modal.title = note.title;
-      this.modal.description = note.description;
-      this.modal.isVisible = true;
-      this.modal.date = note.date;
+      this.form.noteId = id;
+      this.form.title = note.title;
+      this.form.description = note.description;
+      this.form.isVisible = true;
+      this.form.date = note.date;
     },
     changeNoteType(id, newType) {
-      if (this.modal.isVisible) {
-        this.modal.isVisible = false;
+      if (this.form.isVisible) {
+        this.form.isVisible = false;
       }
       this.notes = this.notes
         .map((el) => el.id === id ? { ...el, type: newType } : el);

@@ -33,18 +33,18 @@
       </div>
     </main>
   </div>
-  <app-darken-page v-if="notesStore.modal.isVisible">
-    <TheModal />
+  <app-darken-page v-if="notesStore.form.isVisible">
+    <TheForm />
   </app-darken-page>
 </template>
 
 <script setup>
-import TheModal from './components/TheModal.vue';
 import AppTypes from './components/AppTypes.vue';
 import AppNotes from './components/AppNotes.vue';
 import AppDarkenPage from './components/AppDarkenPage.vue';
 import AppCurrentNoteContent from './components/AppCurrentNoteContent.vue';
 import { useNotesStore } from './store';
+import TheForm from './components/TheForm.vue';
 
 const notesStore = useNotesStore();
 </script>

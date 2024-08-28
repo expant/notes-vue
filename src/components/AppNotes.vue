@@ -19,11 +19,10 @@
           :key="note.id"
           :title="note.title"
           type="added"
-          @show-modal="notesStore.defineModal(note.id)"
-          @remove-note="notesStore.removeNote(note.id)"
           @show-content="showNoteContent(note.id)"
+          @remove-note="notesStore.removeNote(note.id)"
         ></app-notes-item>
-        <button class="notes-new">
+        <button class="notes-new" @click="notesStore.form.isVisible = true">
           <app-notes-item type="new"></app-notes-item>
         </button>
       </ul>

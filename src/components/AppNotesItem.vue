@@ -2,9 +2,8 @@
   <li 
     class="notes-item note animation" 
     v-if="type === 'added'"
-    @mouseover="$emit('show-content')"
   >
-    <span class="title" @click="$emit('show-modal')">{{ title }}</span>
+    <span class="title" @click="$emit('show-content')">{{ title }}</span>
     <div class="remove-note" @click="$emit('remove-note')"></div>
   </li>
   <li class="notes-new-item note" v-if="type === 'new'">
