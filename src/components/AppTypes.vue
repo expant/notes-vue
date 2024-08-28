@@ -21,7 +21,7 @@
           @change="handleNewType($event)"
         >
       </transition>
-      <span v-if="typesState.isTypeExist" class="exist">Тип с таким именем уже существует</span>
+      <span v-if="types.errMessage" class="exist">{{ typesState.errMessage }}</span>
     </div>
   </div>
 </template>
@@ -37,16 +37,23 @@ const { types, controlMenu, currentNote } = storeToRefs(notesStore);
 const typesState = reactive({
   newTypeName: '',
   isTypeExist: false,
+  errMessage: '',
 });
 
 const handleNewType = (event) => {
-  if (notesStore.types.all.includes(event.target.value)) {
-    typesState.isTypeExist = true;
+  const value = event.target.value.trim();
+  console.log(value);
+  if (!value) {
+    typesState.errMessage = 'Пустой тип';
     return;
   }
 
-  typesState.isTypeExist = false;
-  notesStore.addNotesType(event.target.value);
+  if (notesStore.types.all.includes(value)) {
+    typesState.errMessage = 'Такой тип уже есть'
+    return;
+  }
+
+  notesStore.addNotesType(value);
   event.target.value = '';
 };
 
@@ -72,9 +79,11 @@ const switchType = (type) => {
 
 .notes-type-btns__new .exist {
   position: absolute;
-  right: 0;
+  top: 40px;
+  left: 160px;
   bottom: 0;
-  font-size: 14px;
+  width: 125px;
+  font-size: 13px;
   color: #F44336;
 }
 
