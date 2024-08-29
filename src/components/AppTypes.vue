@@ -11,8 +11,8 @@
     <div class="notes-type-btns__new">
       <app-notes-type-btn 
         btnType="new" 
-        :errMessage="typesState.errMessage"
-        @clear-err-message="typesState.errMessage = ''"
+        :errMessage="newTypeState.errMessage"
+        @clear-err-message="newTypeState.errMessage = ''"
       ></app-notes-type-btn>
       <transition name="fade">
         <div class="note-type-input">
@@ -26,10 +26,12 @@
             @input="validatNewType($event)"
             @change="handleNewType($event)"
           >
-          <span
-            class="exist"
-            v-if="typesState.errMessage"
-          >{{ typesState.errMessage }}</span>
+          <transition name="err-message-appearance">
+            <span
+              class="exist"
+              v-if="newTypeState.errMessage"
+            >{{ newTypeState.errMessage }}</span>
+          </transition>
         </div>
       </transition>
     </div>
@@ -44,42 +46,42 @@ import { reactive } from 'vue';
 
 const notesStore = useNotesStore();
 const { types, controlMenu, currentNote } = storeToRefs(notesStore);
-const typesState = reactive({
-  newTypeName: '',
-  isTypeExist: false,
+
+const MAX_TYPE_LENGTH = 40;
+
+const newTypeState = reactive({
   errMessage: '',
   isNewTypeValid: false,
 });
-const MAX_TYPE_LENGTH = 40;
 
 const validatNewType = (event) => {
-  typesState.isNewTypeValid = false;
-  typesState.errMessage = '';
+  newTypeState.isNewTypeValid = false;
+  newTypeState.errMessage = '';
   const value = event.target.value.trim();
   if (!value) {
-    typesState.errMessage = 'Пустое название';
+    newTypeState.errMessage = 'Пустое название';
     return;
   }
 
   if (notesStore.types.all.includes(value)) {
-    typesState.errMessage = 'Такой тип уже есть'
+    newTypeState.errMessage = 'Такой тип уже есть'
     return;
   }
 
   if (value.length > MAX_TYPE_LENGTH) {
-    typesState.errMessage = 'Длинное название. Максим 40 символов!';
+    newTypeState.errMessage = 'Длинное название. Максим 40 символов!';
     return;
   }
 
-  typesState.isNewTypeValid = true;
+  newTypeState.isNewTypeValid = true;
 };
 
 const handleNewType = (event) => {
-  if (!typesState.isNewTypeValid) return;
+  if (!newTypeState.isNewTypeValid) return;
 
   const value = event.target.value.trim();
   notesStore.addNotesType(value);
-  typesState.errMessage = '';
+  newTypeState.errMessage = '';
   event.target.value = '';
 }
 
@@ -121,6 +123,7 @@ const switchType = (type) => {
 }
 
 .notes-type-btns__new .exist {
+  display: inline-block;
   font-size: 13px;
   color: #F44336;
 }
@@ -133,5 +136,21 @@ const switchType = (type) => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.err-message-appearance-enter-active {
+  animation: err-message 0.3s;
+}
+
+@keyframes err-message {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>
