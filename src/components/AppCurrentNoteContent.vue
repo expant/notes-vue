@@ -23,21 +23,24 @@ const props = defineProps({
   }
 });
 
-const note = computed(() => notesStore.getNoteById(props.noteId));
+const note = computed(() => notesStore.getNoteByProp('id', props.noteId));
 </script>
 
 <style scoped>
 .current-note {
   display: flex;
   flex-direction: column;
-  flex: 0 1 500px;
-  min-width: 500px;
-  max-width: 600px;
+  flex: 0 1 100%;
   min-height: 400px;
   padding: 30px;
   background: #eee;
   border-radius: 5px;
   color: #333;
+}
+
+.current-note__title,
+.current-note__description {
+  word-break: break-all;
 }
 
 .current-note__description {

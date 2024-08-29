@@ -2,10 +2,6 @@ import { defineStore } from "pinia";
 
 export const useNotesStore = defineStore('notesStore', {
   state: () => ({
-    addNoteForm: {
-      title: '',
-      description: '',
-    },
     types: {
       isFormVisible: false,
       current: 'Все',
@@ -119,9 +115,6 @@ export const useNotesStore = defineStore('notesStore', {
     },
   }),
   getters: {
-    showPreview() {
-      return this.addNoteForm.title;
-    },
     getSearchNotes: (state) => {
       return (notes = state.notes) => notes.filter((el) => el.title.includes(state.searched))
     },
@@ -129,24 +122,26 @@ export const useNotesStore = defineStore('notesStore', {
       if (this.types.current === this.types.all[0]) {
         return this.getSearchNotes();
       }
+  
       const notesByType = this.notes.filter((el) => el.type === this.types.current);
+      console.log(notesByType);
       return this.getSearchNotes(notesByType);
     },
-    getNoteById: (state) => {
-      return (id) => state.notes.find((el) => el.id === id);
+    getNoteByProp: (state) => {
+      return (name, val) => state.notes.find((el) => el[name] === val);
     },
   },
   actions: {
-    addNote() {
-      const { title, description } = this.addNoteForm;
+    addNote(title, description) {
+      // const { title, description } = this.addNoteForm;
       this.notes.push({
         title,
         description,
         id: new Date().valueOf(),
         type: this.types.current,
       });
-      this.addNoteForm.title = '';
-      this.addNoteForm.description = '';
+      // this.addNoteForm.title = '';
+      // this.addNoteForm.description = '';
       this.form.isVisible = false;
     },
     addNotesType(typeName) {

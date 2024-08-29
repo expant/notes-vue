@@ -92,8 +92,13 @@ const notesStore = useNotesStore();
 
 .list {
   display: flex;
+  flex-flow: row wrap;
   gap: 100px;
   margin-top: 40px;
+}
+
+.content {
+  flex: 0 1 600px;
 }
 
 .add-new-note {

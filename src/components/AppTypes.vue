@@ -14,8 +14,8 @@
         :errMessage="newTypeState.errMessage"
         @clear-err-message="newTypeState.errMessage = ''"
       ></app-notes-type-btn>
-      <transition name="fade">
-        <div class="note-type-input">
+      <div class="note-type-input">
+        <transition name="fade">
           <input
             type="text"
             name="new-type"
@@ -26,14 +26,14 @@
             @input="validatNewType($event)"
             @change="handleNewType($event)"
           >
-          <transition name="err-message-appearance">
-            <span
-              class="exist"
-              v-if="newTypeState.errMessage"
-            >{{ newTypeState.errMessage }}</span>
-          </transition>
-        </div>
-      </transition>
+        </transition>
+        <transition name="err-message-appearance">
+          <span
+            class="err-message"
+            v-if="newTypeState.errMessage"
+          >{{ newTypeState.errMessage }}</span>
+        </transition>
+      </div>
     </div>
   </div>
 </template>
@@ -122,7 +122,7 @@ const switchType = (type) => {
   color: #333;
 }
 
-.notes-type-btns__new .exist {
+.notes-type-btns__new .err-message {
   display: inline-block;
   font-size: 13px;
   color: #F44336;
@@ -136,6 +136,11 @@ const switchType = (type) => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
 }
 
 .err-message-appearance-enter-active {

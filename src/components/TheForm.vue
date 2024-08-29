@@ -5,11 +5,15 @@
       <h2 class="form-item__title">Новая заметка</h2>
       <form>
         <div class="title-field">
-        <input 
-          type="text" 
-          placeholder="Название"
-          v-model="notesStore.addNoteForm.title"
-        >
+          <input 
+            type="text" 
+            placeholder="Название"
+            @input="validateTitle($event)"
+          >
+          <div 
+            class="warning-item" 
+            v-show="errMessages.title"
+          >{{ errMessages.title }}</div>
         </div>
         <div class="description-field">
           <textarea 
@@ -18,13 +22,18 @@
             cols="30"
             rows="10" 
             placeholder="Описание"
-            v-model="notesStore.addNoteForm.description"
+            @change="validateDescription($event)"
           ></textarea>
+          <div 
+            class="warning-item" 
+            v-show="errMessages.description"
+          >{{ errMessages.description }}</div>
         </div>
         <div class="form-item__btn">
           <button 
             type="submit" 
-            @click.prevent="notesStore.addNote"
+            @click.prevent="handleForm"
+            @submit.prevent="handleForm"
           >Добавить</button>
         </div>
       </form>
@@ -34,7 +43,56 @@
 
 <script setup>
 import { useNotesStore } from '@/store';
+import { reactive } from 'vue';
 const notesStore = useNotesStore();
+
+const form = reactive({
+  title: '',
+  description: '',
+});
+
+const errMessages = reactive({
+  title: '',
+  description: '',
+});
+
+const validateTitle = (event) => {
+  console.log('Запускается');
+  errMessages.title = '';
+  form.title = event.target.value.trim();
+
+  if (!form.title) {
+    errMessages.title = 'Название не должно быть пустым';
+    return;
+  }
+
+  const sameNote = notesStore.getNoteByProp('title', form.title);
+  if (!sameNote) return;
+  errMessages.title = 'Заметка с таким именем уже существует!';
+};
+
+const validateDescription = (event) => {
+  errMessages.description = '';
+
+  form.description = event.target.value.trim();
+  if (form.description) return;
+
+  errMessages.description = 'Описание не должно быть пустым';
+};
+
+const handleForm = () => {
+  const { title, description } = errMessages;
+  const isValid = !title && !description; 
+
+  if (!isValid) {
+    console.log('Форма не валидна');
+    return;
+  }
+
+  notesStore.addNote(form.title, form.description);
+  form.title = '';
+  form.description = '';
+}
 </script>
 
 <style scoped> 

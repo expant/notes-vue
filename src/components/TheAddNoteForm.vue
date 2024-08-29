@@ -6,12 +6,12 @@
         <input 
           type="text" 
           placeholder="Название"
-          v-model.trim="addNoteForm.title"
+          @input="validateTitle($event)"
         >
-        <!-- <div 
+        <div 
           class="warning-item" 
-          v-if="isEmpty || compareLength(maxLength)"
-        >{{ showWarningItem(isEmpty, variant) }}</div> -->
+          v-show="errMessages.title"
+        >{{ errMessages.title }}</div>
       </div>
       <div class="add-note__description">
         <textarea 
@@ -20,7 +20,6 @@
           cols="30"
           rows="10" 
           placeholder="Описание"
-          v-model.trim="addNoteForm.description"
         ></textarea>
         <!-- <div 
           class="warning-item" 
@@ -30,8 +29,8 @@
       <button 
         class="add-note__btn"
         type="submit" 
-        @click.prevent="run"
-        @submit.prevent="run"
+        @click.prevent="handleForm"
+        @submit.prevent="handleForm"
       >Добавить</button>
     </form>
   </div>
@@ -39,28 +38,52 @@
 
 <script setup>
 import { useNotesStore } from '@/store';
-import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, reactive } from 'vue';
 
 const notesStore = useNotesStore();
-const { addNoteForm } = storeToRefs(notesStore);
 
-const isFormValid = () => {
-  const { title, description } = addNoteForm.value;
+// const form = reactive({
+//   title: '',
+//   description: '',
+// });
 
-  if (!title || !description) {
-    return false;
+const errMessages = reactive({
+  title: '',
+  description: '',
+});
+
+const validateTitle = (event) => {
+  console.log('Запускается');
+  errMessages.title = '';
+  const value = event.target.value.trim();
+
+  if (!value) {
+    errMessages.title = 'Название не должно быть пустым';
+    return;
   }
-  return true;
+
+  const sameNote = notesStore.getNoteByProp('title', value);
+  if (!sameNote) return;
+  errMessages.title = 'Заметка с таким именем уже существует!';
 };
 
-const showWarnings = () => {
-  console.log('Форма не валидна');
-};
+// const validateDescription = () => {
+//   errMessages.description = '';
 
-const run = computed(() => 
-  isFormValid() ? notesStore.addNote() : showWarnings()
-);
+//   if (addNoteForm.value.description) return;
+//   errMessages.title = 'Название не должно быть пустым';
+// };
+
+const handleForm = () => {
+  const { title, description } = errMessages;
+  const isValid = !title && !description; 
+
+  if (!isValid) {
+    console.log('Форма не валидна');
+    return;
+  }
+  notesStore.addNote();
+}
 
 </script>
 
@@ -105,9 +128,8 @@ const run = computed(() =>
 }
 
 .warning-item {
-	font-size: 12px;
+	font-size: 13px;
 	text-align: right;
-	margin-top: 5px;
 	color: #F44336;
 }
 
