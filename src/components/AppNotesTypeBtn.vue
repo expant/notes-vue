@@ -9,7 +9,7 @@
   <button 
     v-if="btnType === 'new'"
     :class="`new ${types.isFormVisible ? 'active' : 'hidden'} notes-count`"
-    @click="types.isFormVisible = !types.isFormVisible"
+    @click="handleNewBtn"
   ></button>
 </template>
 
@@ -20,7 +20,7 @@ import { useNotesStore } from '@/store';
 const notesStore = useNotesStore();
 const { types } = storeToRefs(notesStore);
 
-const emits = defineEmits(['switch-type']);
+const emits = defineEmits(['switch-type', 'clear-err-message']);
 const props = defineProps({
   notesType: {
     type: String,
@@ -33,7 +33,18 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  errMessage: {
+    type: String,
+    required: true,
+  }
 });
+
+const handleNewBtn = () => {
+  types.value.isFormVisible = !types.value.isFormVisible;
+  if (!types.isFormVisible) {
+    emits('clear-err-message');
+  }
+}
 </script>
 
 <style scoped>
@@ -51,11 +62,6 @@ const props = defineProps({
   color: #333;
   background: #9ACD32;
 }
-
-/* .active-notes__count {
-  color: #333;
-  background: #9ACD32;
-} */
 
 .current {
   color: #333;

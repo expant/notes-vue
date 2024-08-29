@@ -9,19 +9,29 @@
       @switch-type="switchType"
     ></app-notes-type-btn>
     <div class="notes-type-btns__new">
-      <app-notes-type-btn btnType="new"></app-notes-type-btn>
+      <app-notes-type-btn 
+        btnType="new" 
+        :errMessage="typesState.errMessage"
+        @clear-err-message="typesState.errMessage = ''"
+      ></app-notes-type-btn>
       <transition name="fade">
-        <input
-          type="text"
-          name="new-type"
-          id="new-type"
-          placeholder="Название типа"
-          :class="types.isFormVisible ? 'active' : 'hidden'"
-          v-if="types.isFormVisible"
-          @change="handleNewType($event)"
-        >
+        <div class="note-type-input">
+          <input
+            type="text"
+            name="new-type"
+            id="new-type"
+            placeholder="Название типа"
+            :class="types.isFormVisible ? 'active' : 'hidden'"
+            v-if="types.isFormVisible"
+            @input="validatNewType($event)"
+            @change="handleNewType($event)"
+          >
+          <span
+            class="exist"
+            v-if="typesState.errMessage"
+          >{{ typesState.errMessage }}</span>
+        </div>
       </transition>
-      <span v-if="types.errMessage" class="exist">{{ typesState.errMessage }}</span>
     </div>
   </div>
 </template>
@@ -38,13 +48,16 @@ const typesState = reactive({
   newTypeName: '',
   isTypeExist: false,
   errMessage: '',
+  isNewTypeValid: false,
 });
+const MAX_TYPE_LENGTH = 40;
 
-const handleNewType = (event) => {
+const validatNewType = (event) => {
+  typesState.isNewTypeValid = false;
+  typesState.errMessage = '';
   const value = event.target.value.trim();
-  console.log(value);
   if (!value) {
-    typesState.errMessage = 'Пустой тип';
+    typesState.errMessage = 'Пустое название';
     return;
   }
 
@@ -53,9 +66,22 @@ const handleNewType = (event) => {
     return;
   }
 
-  notesStore.addNotesType(value);
-  event.target.value = '';
+  if (value.length > MAX_TYPE_LENGTH) {
+    typesState.errMessage = 'Длинное название. Максим 40 символов!';
+    return;
+  }
+
+  typesState.isNewTypeValid = true;
 };
+
+const handleNewType = (event) => {
+  if (!typesState.isNewTypeValid) return;
+
+  const value = event.target.value.trim();
+  notesStore.addNotesType(value);
+  typesState.errMessage = '';
+  event.target.value = '';
+}
 
 const switchType = (type) => {
   types.value.current = type;
@@ -77,27 +103,26 @@ const switchType = (type) => {
   gap: 5px;
 }
 
-.notes-type-btns__new .exist {
+.note-type-input,
+.notes-type-btns__new input {
+  height: 100%;
+}
+
+.note-type-input {
   position: absolute;
-  top: 40px;
-  left: 160px;
-  bottom: 0;
-  width: 125px;
-  font-size: 13px;
-  color: #F44336;
+  left: 46px;
+  text-align: right;
 }
 
 .notes-type-btns__new input {
   padding: 5px 10px;
   border: 1px solid #80CBC4;
   color: #333;
-  position: absolute;
-  left: 46px;
-  height: 100%;
-  /* transition: 0.2s;
-  animation: show-new-type-input 0.2s 1;
-  animation-fill-mode: forwards;
-  animation-delay: 0s; */
+}
+
+.notes-type-btns__new .exist {
+  font-size: 13px;
+  color: #F44336;
 }
 
 .fade-enter-active,
