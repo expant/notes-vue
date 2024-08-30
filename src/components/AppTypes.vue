@@ -103,6 +103,7 @@ const switchType = (type) => {
   position: relative;
   display: flex;
   gap: 5px;
+  height: 40px;
 }
 
 .note-type-input,

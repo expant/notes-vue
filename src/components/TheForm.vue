@@ -3,31 +3,32 @@
     <div class="form-item">
       <div class="close" @click="notesStore.form.isVisible = false"></div>
       <h2 class="form-item__title">Новая заметка</h2>
-      <form>
-        <div class="title-field">
+      <form action="" class="form">
+        <div class="title-field field-wrap">
           <input 
             type="text" 
             placeholder="Название"
-            @input="validateTitle($event)"
+            :class="`${state.title.currentErr ? 'invalid' : ''} field`"
+            @input="validate($event, 'title')"
           >
           <div 
             class="warning-item" 
-            v-show="errMessages.title"
-          >{{ errMessages.title }}</div>
+            v-show="state.title.currentErr"
+          >{{ state.title.currentErr }}</div>
         </div>
-        <div class="description-field">
+        <div class="description-field field-wrap">
           <textarea 
             name="description" 
             id="description" 
-            cols="30"
             rows="10" 
             placeholder="Описание"
-            @change="validateDescription($event)"
+            :class="`${state.description.currentErr ? 'invalid' : ''} field`"
+            @change="validate($event, 'description')"
           ></textarea>
           <div 
             class="warning-item" 
-            v-show="errMessages.description"
-          >{{ errMessages.description }}</div>
+            v-show="state.description.currentErr"
+          >{{ state.description.currentErr }}</div>
         </div>
         <div class="form-item__btn">
           <button 
@@ -46,52 +47,66 @@ import { useNotesStore } from '@/store';
 import { reactive } from 'vue';
 const notesStore = useNotesStore();
 
-const form = reactive({
-  title: '',
-  description: '',
-});
+const state = reactive({
+  title: {
+    errors: {
+      empty: 'Название не должно быть пустым',
+      exist: 'Заметка с таким именем уже существует!',
+    },
+    currentErr: '',
+    field: '',
+  },
+  description: {
+    errors: {
+      empty: 'Описание не должно быть пустым',
+    },
+    currentErr: '',
+    field: '',
+  },
+})
 
-const errMessages = reactive({
-  title: '',
-  description: '',
-});
+const validate = (event, fieldName) => {
+  state[fieldName].currentErr = '';
+  state[fieldName].field = event.target.value.trim();
 
-const validateTitle = (event) => {
-  console.log('Запускается');
-  errMessages.title = '';
-  form.title = event.target.value.trim();
-
-  if (!form.title) {
-    errMessages.title = 'Название не должно быть пустым';
-    return;
+  switch (fieldName) {
+    case 'title': {
+      const { title } = state;
+      if (!title.field) {
+        state.title.currentErr = title.errors.empty;
+        break;
+      }
+      const sameNote = notesStore.getNoteByProp(fieldName, title.field);
+      if (!sameNote) return;
+      state.title.currentErr = title.errors.exist;
+      break;
+    }
+    case 'description': {
+      const { description } = state;
+      state.description.currentErr = description.field ? '' : description.errors.empty;
+      break;
+    }
+    default: throw new Error(`Unknown fieldName: ${fieldName}`);
   }
-
-  const sameNote = notesStore.getNoteByProp('title', form.title);
-  if (!sameNote) return;
-  errMessages.title = 'Заметка с таким именем уже существует!';
-};
-
-const validateDescription = (event) => {
-  errMessages.description = '';
-
-  form.description = event.target.value.trim();
-  if (form.description) return;
-
-  errMessages.description = 'Описание не должно быть пустым';
 };
 
 const handleForm = () => {
-  const { title, description } = errMessages;
-  const isValid = !title && !description; 
+  const { title, description } = state;
+  const emptyTitle = title.errors.empty;
+  const emptyDescription = description.errors.empty;
 
-  if (!isValid) {
-    console.log('Форма не валидна');
+  state.title.currentErr = title.field ? '' : emptyTitle;
+  state.description.currentErr = description.field ? '' : emptyDescription;
+  const titleErr = state.title.currentErr;
+  const descriptionErr = state.description.currentErr;
+
+  if (titleErr || descriptionErr) {
     return;
   }
 
-  notesStore.addNote(form.title, form.description);
-  form.title = '';
-  form.description = '';
+  notesStore.addNote(title.field, description.field);
+  state.title.field = '';
+  state.description.field = '';
 }
 </script>
 
@@ -158,56 +173,27 @@ const handleForm = () => {
   transform: rotate(-45deg);
 }
 
-.form-item__footer {
+.form {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-top: auto;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.modal-item__btns {
-  margin-top: auto;
-}
-
-.modal-item__btns .completed,
-.modal-item__btns .remove {
-  font-weight: 400;
-  font-size: 18px;
-  padding: 12px 17px;
-  border-radius: 5px;
-  border: 1px solid #1000ff;
-  cursor: pointer;
-}
-
-.modal-item__btns .completed {
-  margin-right: 13px;
-  color: #ffffff;
-  background: #1000ff;
-}
-
-.modal-item__btns .remove {
-  color: #1000ff;
-  background: #ffffff;
-}
-
-.title-field input,
-.description-field textarea {
+.field {
   width: 100%;
   font-size: 16px;
   padding: 16px;
   background: #eee;
-  border: 0;
+  border: 1px solid #eee;
   border-radius: 5px;
   word-wrap: break-word;
 }
 
-.title-field input:focus,
-.description-field textarea:focus {
+.field:focus {
   outline: none;
 }
 
-.description-field textarea {
-  margin: 10px 0;
+textarea.field {
   resize: none;
 }
 
@@ -221,4 +207,21 @@ const handleForm = () => {
 .form-item__btn button:hover {
   background: #0b00b2; 
 }
+
+.field-wrap {
+  position: relative;
+}
+
+.field-wrap .invalid {
+  border: 1px solid #F44336;
+}
+
+.warning-item {
+  position: absolute;
+  right: 5px;
+  bottom: -17px;
+  font-size: 13px;
+  color: #F44336;
+}
+
 </style>
