@@ -11,7 +11,6 @@
     <div class="notes-type-btns__new">
       <app-notes-type-btn 
         btnType="new" 
-        :errMessage="newTypeState.errMessage"
         @clear-err-message="newTypeState.errMessage = ''"
       ></app-notes-type-btn>
       <div class="note-type-input">

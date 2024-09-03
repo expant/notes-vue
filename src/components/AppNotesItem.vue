@@ -21,7 +21,6 @@ const emits = defineEmits([
 const props = defineProps({
   title: {
     type: String,
-    required: true,
   },
   type: {
     type: String,

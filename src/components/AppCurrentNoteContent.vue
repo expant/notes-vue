@@ -1,5 +1,5 @@
 <template>
-  <div class="current-note content">
+  <div class="current-note content" v-if="note">
     <h2 class="current-note__title">{{ note.title }}</h2>
     <p class="current-note__description">{{ note.description }}</p>
     <div class="current-note__btns">

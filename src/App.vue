@@ -1,24 +1,27 @@
 <template>
   <div class="container">
-    <!-- <div class="side-bar">
-      <h1 class="side-bar__title">Список заметок</h1>
-      <TheAddNoteForm />
-    </div> -->
     <header class="header">
       <h1 class="header__title">Список заметок</h1>
+    </header>
+    <main class="main">
+      <div class="types">
+        <AppTypes />
+      </div>
       <div class="search" role="search">
-        <label for="search">Поиск:</label>
+        <label for="search">
+          <AppIcon 
+            iconName="search"
+            :iconWidth="15"
+            :iconHeight="15"
+            strokeColor="#000000" 
+          />
+        </label>
         <input container
           v-model.trim="notesStore.searched"
           type="search" 
           name="search" 
           placeholder="Найти"
         >
-      </div>
-    </header>
-    <main class="main">
-      <div class="types">
-        <AppTypes />
       </div>
       <div class="list">
         <AppNotes />
@@ -45,6 +48,7 @@ import AppDarkenPage from './components/AppDarkenPage.vue';
 import AppCurrentNoteContent from './components/AppCurrentNoteContent.vue';
 import { useNotesStore } from './store';
 import TheForm from './components/TheForm.vue';
+import AppIcon from './components/AppIcon.vue';
 
 const notesStore = useNotesStore();
 </script>
@@ -53,48 +57,55 @@ const notesStore = useNotesStore();
 .container {
   display: flex;
   flex-direction: column;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 30px;
+  padding-top: 0;
 }
 
 .header {
   display: flex;
   align-items: center;
-  gap: 30px;
-  padding: 20px 40px;
 }
 
 .header__title {
-  font-size: 50px;
+  font-size: 40px;
   font-weight: 200;
-  color: #948ef5;
+  color: #ffffff;
+  background: #948ef5;
+  border-radius: 0 0 10px 10px;
+  padding: 20px;
 }
 
 /* main (search) */
 .search {
-  flex: 0 1 600px;
+  position: relative;
   display: flex;
   align-items: center;
-  padding: 20px;
-  background: rgb(2,0,36);
-  background: linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(16,0,255,1) 0%, rgba(255,255,255,1) 74%); 
-  border-radius: 10px;
-  color: #fff;
+  margin-top: 40px;
 }
 
 .search input {
-  flex: 0 1 400px;
-  margin-left: 10px;
+  flex: 0 1 300px;
   padding: 12px 15px;
+  padding-left: 30px;
+  border: 1px solid #eee;
+}
+
+.search label {
+  position: absolute;
+  left: 10px;
 }
 
 .main {
-  padding: 35px 100px;
+  padding: 35px 0;
 }
 
 .list {
   display: flex;
   flex-flow: row wrap;
   gap: 100px;
-  margin-top: 40px;
+  margin-top: 10px;
 }
 
 .content {

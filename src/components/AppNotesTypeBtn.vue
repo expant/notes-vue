@@ -33,10 +33,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  errMessage: {
-    type: String,
-    required: true,
-  }
 });
 
 const handleNewBtn = () => {

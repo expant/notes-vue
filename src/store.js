@@ -8,20 +8,7 @@ export const useNotesStore = defineStore('notesStore', {
       all: ['Все'],
     },
     searched: '',
-    notes: [
-      {
-        type: 'Завершённые',
-        id: 14,
-        title: 'Заметка 14',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      },
-      {
-        type: 'Завершённые',
-        id: 15,
-        title: 'Заметка 15',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      },
-    ],
+    notes: [],
     currentNote: {
       active: false,
       id: null,
@@ -46,7 +33,6 @@ export const useNotesStore = defineStore('notesStore', {
       }
   
       const notesByType = this.notes.filter((el) => el.type === this.types.current);
-      console.log(notesByType);
       return this.getSearchNotes(notesByType);
     },
     getNoteByProp: (state) => {
@@ -78,6 +64,7 @@ export const useNotesStore = defineStore('notesStore', {
       }
 
       this.notes = this.notes.filter((el) => el.type !== this.types.current);
+      this.currentNote.active = false;
     },
     removeCurrentType() {
       const index = this.types.all.indexOf(this.types.current);
