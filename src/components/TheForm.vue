@@ -92,15 +92,7 @@ const validate = (event, fieldName) => {
 
 const handleForm = () => {
   const { title, description } = state;
-  const emptyTitle = title.errors.empty;
-  const emptyDescription = description.errors.empty;
-
-  state.title.currentErr = title.field ? '' : emptyTitle;
-  state.description.currentErr = description.field ? '' : emptyDescription;
-  const titleErr = state.title.currentErr;
-  const descriptionErr = state.description.currentErr;
-
-  if (titleErr || descriptionErr) {
+  if (title.currentErr || description.currentErr) {
     return;
   }
 
