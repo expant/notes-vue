@@ -53,14 +53,14 @@ const state = reactive({
       empty: 'Название не должно быть пустым',
       exist: 'Заметка с таким именем уже существует!',
     },
-    currentErr: '',
+    currentErr: null,
     field: '',
   },
   description: {
     errors: {
       empty: 'Описание не должно быть пустым',
     },
-    currentErr: '',
+    currentErr: null,
     field: '',
   },
 })
@@ -90,8 +90,16 @@ const validate = (event, fieldName) => {
   }
 };
 
+const checkCurrentErr = (fieldName) => {
+  if (state[fieldName].currentErr === null) {
+    state[fieldName].currentErr = state[fieldName].errors.empty;
+  }
+};
+
 const handleForm = () => {
   const { title, description } = state;
+  checkCurrentErr('title');
+  checkCurrentErr('description');
   if (title.currentErr || description.currentErr) {
     return;
   }
