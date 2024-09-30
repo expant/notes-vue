@@ -1,8 +1,6 @@
 <template>
+  <TheHeader />
   <div class="container">
-    <header class="header">
-      <h1 class="header__title">Список заметок</h1>
-    </header>
     <main class="main">
       <div class="types">
         <AppTypes />
@@ -50,6 +48,7 @@ import AppCurrentNoteContent from './components/AppCurrentNoteContent.vue';
 import { useNotesStore } from './store';
 import TheForm from './components/TheForm.vue';
 import AppIcon from './components/AppIcon.vue';
+import TheHeader from './components/views/TheHeader.vue';
 import TheFooter from './components/views/TheFooter.vue';
 
 const notesStore = useNotesStore();
@@ -63,20 +62,6 @@ const notesStore = useNotesStore();
   margin: 0 auto;
   padding: 30px;
   padding-top: 0;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-}
-
-.header__title {
-  font-size: 40px;
-  font-weight: 200;
-  color: #ffffff;
-  background: #948ef5;
-  border-radius: 0 0 10px 10px;
-  padding: 20px;
 }
 
 /* main (search) */
