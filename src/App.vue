@@ -35,6 +35,7 @@
         </div>
       </div>
     </main>
+    <TheFooter />
   </div>
   <app-darken-page v-if="notesStore.form.isVisible">
     <TheForm />
@@ -49,6 +50,7 @@ import AppCurrentNoteContent from './components/AppCurrentNoteContent.vue';
 import { useNotesStore } from './store';
 import TheForm from './components/TheForm.vue';
 import AppIcon from './components/AppIcon.vue';
+import TheFooter from './components/views/TheFooter.vue';
 
 const notesStore = useNotesStore();
 </script>
