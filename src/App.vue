@@ -1,7 +1,7 @@
 <template>
   <TheHeader />
   <div class="container">
-    <main class="main">
+    <main class="main py-10">
       <div class="types">
         <AppTypes />
       </div>
@@ -82,10 +82,6 @@ const notesStore = useNotesStore();
 .search label {
   position: absolute;
   left: 10px;
-}
-
-.main {
-  padding: 35px 0;
 }
 
 .list {

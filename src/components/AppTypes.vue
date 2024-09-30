@@ -1,6 +1,7 @@
 <template>
-  <div class="notes-type-btns">
+  <div class="notes-type-btns flex flex-wrap content-stretch gap-2.5 min-h-2.5">
     <app-notes-type-btn
+      class="h-full"
       v-for="type in types.all"
       :key="type"
       :notesType="type"
@@ -10,6 +11,7 @@
     ></app-notes-type-btn>
     <div class="notes-type-btns__new">
       <app-notes-type-btn 
+        class="h-full"
         btnType="new" 
         @clear-err-message="newTypeState.errMessage = ''"
       ></app-notes-type-btn>
@@ -20,7 +22,7 @@
             name="new-type"
             id="new-type"
             placeholder="Название типа"
-            :class="types.isFormVisible ? 'active' : 'hidden'"
+            :class="[types.isFormVisible ? 'active' : 'hidden', 'h-full']"
             v-if="types.isFormVisible"
             @input="validatNewType($event)"
             @change="handleNewType($event)"
@@ -92,17 +94,16 @@ const switchType = (type) => {
 </script>
 
 <style scoped>
-.notes-type-btns {
+/* .notes-type-btns {
   display: flex;
   flex-flow: row wrap;
   gap: 10px;
-}
+} */
 
 .notes-type-btns__new {
   position: relative;
   display: flex;
   gap: 5px;
-  height: 40px;
 }
 
 .note-type-input,
