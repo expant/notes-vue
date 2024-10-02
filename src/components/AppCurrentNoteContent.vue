@@ -1,10 +1,10 @@
 <template>
-  <div class="current-note content" v-if="note">
-    <h2 class="current-note__title">{{ note.title }}</h2>
-    <p class="current-note__description">{{ note.description }}</p>
-    <div class="current-note__btns">
+  <div class="content flex flex-col grow-0 shrink basis-full sm:min-h-[400px] p-5 sm:p-[30px] bg-[#eeeeee] rounded text-black" v-if="note">
+    <h2 class="text-xl text-sky-600 break-all">{{ note.title }}</h2>
+    <p class="break-all text-sm sm:text-base my-5">{{ note.description }}</p>
+    <div class="justify-self-start self-end mt-auto">
       <button 
-        class="remove" 
+        class="font-normal text-sm sm:text-[18px] p-2.5 sm:py-[12px] sm:px-[17px] bg-sky-600 hover:bg-sky-600 hover:text-white sm:bg-[#eee] border border-solid border-sky-600 rounded text-white sm:text-sky-600 transition-all" 
         @click="notesStore.removeNote(noteId)"
       >Удалить</button>
     </div>
@@ -27,45 +27,4 @@ const note = computed(() => notesStore.getNoteByProp('id', props.noteId));
 </script>
 
 <style scoped>
-.current-note {
-  display: flex;
-  flex-direction: column;
-  flex: 0 1 100%;
-  min-height: 400px;
-  padding: 30px;
-  background: #eee;
-  border-radius: 5px;
-  color: #333;
-}
-
-.current-note__title,
-.current-note__description {
-  word-break: break-all;
-}
-
-.current-note__description {
-  margin: 20px 0;
-}
-
-.current-note__btns {
-  justify-self: flex-end;
-  align-self: flex-end;
-  margin-top: auto;
-}
-
-.current-note__btns .remove {
-  font-weight: 400;
-  font-size: 18px;
-  padding: 12px 17px;
-  background: #eee;
-  border: 1px solid #1000ff;
-  border-radius: 5px;
-  color: #1000ff;
-  transition: all 0.1s ease;
-}
-
-.current-note__btns .remove:hover {
-  background: #1000ff;
-  color: #ffffff;
-}
 </style>

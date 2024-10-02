@@ -1,8 +1,8 @@
 <template>
-  <div class="notes">
-    <div class="notes_flex">
-      <div class="notes__wrap">
-        <div class="notes__count">{{ getNotes.length }}</div>
+  <div class="notes flex w-full sm:w-[300px] justify-between gap-[50px] sm:gap-[100px] rounded-[10px]">
+    <div class="notes_flex w-full">
+      <div class="flex justify-between items-center">
+        <div class="notes__count text-xl sm:text-3xl font-extrabold text-sky-600">{{ getNotes.length }}</div>
         <button 
           class="notes__control"
           @click="controlMenu.active = !controlMenu.active"
@@ -13,7 +13,7 @@
           </transition>
         </button>
       </div>
-      <ul class="notes-list">
+      <ul class="notes-list flex flex-col gap-2.5 mt-2.5 sm:mt-5">
         <app-notes-item
           v-for="note in getNotes"
           :key="note.id"
@@ -46,42 +46,16 @@ const handleNewNote = () => {
 };
 
 const showNoteContent = (id) => {
+  console.log(notesStore.currentNote);
   notesStore.currentNote.active = true;
   notesStore.currentNote.id = id;
 }
 </script>
 
 <style scoped>
-.notes {
-  width: 300px;
-  display: flex;
-  justify-content: space-between;
-  gap: 100px;
-  border-radius: 10px;
-}
 
 .active-notes {
   background: #ffffff;
-}
-
-.notes-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
-  list-style-type: none;
-}
-
-.notes__count {
-  font-size: 30px;
-  font-weight: 800;
-  color: #968ff5;
-}
-
-.notes__wrap {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .notes__control {
@@ -90,11 +64,6 @@ const showNoteContent = (id) => {
 
 .notes__control .active {
   background: #eee;
-}
-
-.notes_flex {
-  flex-shrink: 0;
-  width: 100%;
 }
 
 .appearance-enter-active,

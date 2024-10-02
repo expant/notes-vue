@@ -1,5 +1,5 @@
 <template>
-  <div class="control-menu">
+  <div class="control-menu absolute right-[45px] sm:left-[45px] top-0 w-[250px] bg-[#eeeeee] shadow-md rounded z-10">
     <button class="control-menu__item" @click="notesStore.form.isVisible = true">Добавить заметку</button>
     <button 
       class="control-menu__item"
@@ -10,7 +10,7 @@
       v-if="notesStore.types.current !== notesStore.types.all[0]"
       @click="notesStore.removeCurrentType"
     >Удалить тип</button>
-    <div class="pointer"></div>
+    <div class="pointer absolute w-2.5 h-2.5 right-[-5px] sm:left-[-5px] top-[12px] rotate-45 bg-[#eeeeee] transition-all"></div>
   </div>
 </template>
 
@@ -22,27 +22,6 @@ const notesStore = useNotesStore();
 </script>
 
 <style scoped>
-.control-menu {
-  position: absolute;
-  width: 250px;
-  left: 45px;
-  top: 0;
-  background:#eee;
-  border-radius: 5px;
-  z-index: 10;
-}
-
-.pointer {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  left: -5px;
-  top: 12px;
-  transform: rotate(45deg);
-  background:#eee;
-  transition: all 0.1s ease;
-}
-
 .control-menu__item {
   width: 100%;
   font-size: 16px;

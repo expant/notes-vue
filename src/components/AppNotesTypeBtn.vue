@@ -1,14 +1,14 @@
 <template>
   <button
     v-if="btnType === 'available'"
-    :class="`${currentType === notesType ? 'current' : ''} notes-count`"
+    :class="['inline-block p-1.5 sm:p-2.5 text-white bg-[#80CBC4] rounded cursor-pointer transition-all', currentType === notesType ? 'current' : '']"
     @click="$emit('switch-type', notesType)"
   >
     {{ notesType }}
   </button>
   <button 
     v-if="btnType === 'new'"
-    :class="`new ${types.isFormVisible ? 'active' : 'hidden'} notes-count`"
+    :class="['new notes-count', types.isFormVisible ? 'active' : 'hidden']"
     @click="handleNewBtn"
   ></button>
 </template>
@@ -44,7 +44,7 @@ const handleNewBtn = () => {
 </script>
 
 <style scoped>
-.notes-count {
+/* .notes-count {
   display: inline-block;
   padding: 10px;
   color: #fff;
@@ -52,7 +52,7 @@ const handleNewBtn = () => {
   border-radius: 5px;
   cursor: pointer;
   transition: all ease-in-out 0.1s;
-}
+} */
 
 .notes-count:hover {
   color: #333;

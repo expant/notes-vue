@@ -1,13 +1,13 @@
 <template>
   <li 
-    class="notes-item note animation" 
+    class="notes-item note animation flex justify-between bg-gradient-to-r from-black from-0% via-sky-600 via-0% to-[#eeeeee] to-80%  translate-x-0 hover:translate-x-[-5px] transition-all" 
     v-if="type === 'added'"
   >
-    <span class="title" @click="$emit('show-content')">{{ title }}</span>
-    <div class="remove-note" @click="$emit('remove-note')"></div>
+    <span class="inline-block font-normal text-base whitespace-nowrap overflow-hidden text-ellipsis text-white w-[85%] sm:w-[230px] p-2.5 sm:p-[15px] text-white" @click="$emit('show-content')">{{ title }}</span>
+    <div class="remove-note relative flex justify-center items-center w-[50px] bg-[#eeeeee] rounded cursor-pointer transition-transform" @click="$emit('remove-note')"></div>
   </li>
-  <li class="notes-new-item note" v-if="type === 'new'">
-    <span class="title">Добавить заметку</span>
+  <li class="w-full rounded p-2.5 sm:p-[15px] text-white bg-sky-600 sm:text-sky-600 hover:text-white sm:bg-white hover:bg-sky-600 border border-solid border-sky-600 transition-all" v-if="type === 'new'">
+    <span class="p-2.5 sm:p-[15px]">Добавить заметку</span>
   </li>
 </template>
 
@@ -56,30 +56,6 @@ const props = defineProps({
   }
 }
 
-.notes-item {
-  display: flex;
-  justify-content: space-between;
-  background: rgb(2,0,36);
-  background: linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(16,0,255,1) 0%, rgba(238,238,238,1) 73%); 
-  transform: translateX(0px);
-  transition: all ease-in-out 0.1s;
-}
-
-.notes-item:hover {
-  transform: translateX(-5px);
-}
-
-.notes-item .title {
-  display: inline-block;
-  width: 230px;
-  font-weight: 400;
-  font-size: 16px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #fff;
-}
-
 .remove-note {
   position: relative;
   display: flex;
@@ -107,19 +83,6 @@ const props = defineProps({
 
 .remove-note::before {
   transform: rotate(-45deg);
-}
-
-.notes-new-item {
-  padding: 15px;
-  color: #2a1cfd;
-  background: #fff;
-  border: 1px solid #2a1cfd;
-  transition: all 0.1s ease;
-}
-
-.notes-new-item:hover {
-  background: #2a1cfd;
-  color: #ffffff;
 }
 
 </style>

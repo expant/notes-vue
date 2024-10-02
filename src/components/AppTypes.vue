@@ -1,7 +1,6 @@
 <template>
-  <div class="notes-type-btns flex flex-wrap content-stretch gap-2.5 min-h-2.5">
+  <div class="flex flex-wrap content-stretch gap-1.5 sm:gap-2.5">
     <app-notes-type-btn
-      class="h-full"
       v-for="type in types.all"
       :key="type"
       :notesType="type"
@@ -9,15 +8,15 @@
       btnType="available"
       @switch-type="switchType"
     ></app-notes-type-btn>
-    <div class="notes-type-btns__new">
+    <div class="notes-type-btns__new relative flex gap-[5px] h-11">
       <app-notes-type-btn 
-        class="h-full"
         btnType="new" 
         @clear-err-message="newTypeState.errMessage = ''"
       ></app-notes-type-btn>
-      <div class="note-type-input">
+      <div class="absolute left-[46px] text-right h-full">
         <transition name="fade">
           <input
+            class="h-full py-5px px-2.5 border border-solid border-[#80CBC4]"
             type="text"
             name="new-type"
             id="new-type"
@@ -94,35 +93,6 @@ const switchType = (type) => {
 </script>
 
 <style scoped>
-/* .notes-type-btns {
-  display: flex;
-  flex-flow: row wrap;
-  gap: 10px;
-} */
-
-.notes-type-btns__new {
-  position: relative;
-  display: flex;
-  gap: 5px;
-}
-
-.note-type-input,
-.notes-type-btns__new input {
-  height: 100%;
-}
-
-.note-type-input {
-  position: absolute;
-  left: 46px;
-  text-align: right;
-}
-
-.notes-type-btns__new input {
-  padding: 5px 10px;
-  border: 1px solid #80CBC4;
-  color: #333;
-}
-
 .notes-type-btns__new .err-message {
   display: inline-block;
   font-size: 13px;
