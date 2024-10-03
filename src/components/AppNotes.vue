@@ -4,10 +4,10 @@
       <div class="flex justify-between items-center">
         <div class="notes__count text-xl sm:text-3xl font-extrabold text-sky-600">{{ getNotes.length }}</div>
         <button 
-          class="notes__control"
+          class="relative"
           @click="controlMenu.active = !controlMenu.active"
         >
-          <AppThreeDots :class="controlMenu.active ? 'active' : ''"/>
+          <AppThreeDots :isActive="controlMenu.active"/>
           <transition name="appearance">
             <AppControlMenu v-show="controlMenu.active" />
           </transition>
@@ -46,26 +46,12 @@ const handleNewNote = () => {
 };
 
 const showNoteContent = (id) => {
-  console.log(notesStore.currentNote);
   notesStore.currentNote.active = true;
   notesStore.currentNote.id = id;
 }
 </script>
 
 <style scoped>
-
-.active-notes {
-  background: #ffffff;
-}
-
-.notes__control {
-  position: relative;
-}
-
-.notes__control .active {
-  background: #eee;
-}
-
 .appearance-enter-active,
 .appearance-leave-active {
   transition: all 0.2s ease;

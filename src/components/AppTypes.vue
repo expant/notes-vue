@@ -8,15 +8,15 @@
       btnType="available"
       @switch-type="switchType"
     ></app-notes-type-btn>
-    <div class="notes-type-btns__new relative flex gap-[5px] h-11">
+    <div class="notes-type-btns__new w-full h-9 relative flex gap-[5px] sm:h-11 sm:w-auto">
       <app-notes-type-btn 
         btnType="new" 
         @clear-err-message="newTypeState.errMessage = ''"
       ></app-notes-type-btn>
-      <div class="absolute left-[46px] text-right h-full">
+      <div class="static grow-1 w-full h-full text-right sm:absolute sm:left-[46px] sm:w-auto">
         <transition name="fade">
           <input
-            class="h-full py-5px px-2.5 border border-solid border-[#80CBC4]"
+            class="w-full text-sm px-2.5 border border-solid border-[#80CBC4] sm:w-auto sm:text-base sm:py-[5px] sm:px-2.5"
             type="text"
             name="new-type"
             id="new-type"
@@ -29,7 +29,7 @@
         </transition>
         <transition name="err-message-appearance">
           <span
-            class="err-message"
+            class="absolute right-0 -bottom-4 inline-block text-xs text-red-500 sm:static"
             v-if="newTypeState.errMessage"
           >{{ newTypeState.errMessage }}</span>
         </transition>
@@ -114,7 +114,7 @@ const switchType = (type) => {
   opacity: 1;
 }
 
-.err-message-appearance-enter-active {
+/* .err-message-appearance-enter-active {
   animation: err-message 0.3s;
 }
 
@@ -128,5 +128,5 @@ const switchType = (type) => {
   100% {
     transform: scale(1);
   }
-}
+} */
 </style>

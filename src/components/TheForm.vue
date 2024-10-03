@@ -1,37 +1,42 @@
 <template>
-  <div class="form-wrap">
-    <div class="form-item">
-      <div class="close" @click="notesStore.form.isVisible = false"></div>
-      <h2 class="form-item__title">Новая заметка</h2>
-      <form action="" class="form">
-        <div class="title-field field-wrap">
+  <div class="flex items-center justify-center w-full h-full">
+    <div class="relative flex flex-col gap-[30px] w-[90%] mx-2.5 sm:mx-0 sm:w-[600px] py-5 px-7 sm:py-[30px] sm:px-[40px] bg-white rounded sm:rounded-[20px] z-20 scale-0 duration-300 animate-show-modal">
+      <div class="absolute top-[15px] right-[15px] w-[25px] h-[25px] cursor-pointer" @click="notesStore.form.isVisible = false">
+        <span class="absolute top-3 w-[25px] h-px bg-black cursor-pointer -rotate-45"></span>
+        <span class="absolute top-3 w-[25px] h-px bg-black cursor-pointer rotate-45"></span>
+      </div>
+      <h2>Новая заметка</h2>
+      <form action="" class="flex flex-col gap-5">
+        <div class="relative">
           <input 
             type="text" 
             placeholder="Название"
-            :class="`${state.title.currentErr ? 'invalid' : ''} field`"
+            :class="[state.title.currentErr ? 'border border-solid border-red-500' : '', 'w-full text-sm p-2 bg-[#eee] border border-solid border-[#eee] rounded break-words focus:outline-none sm:text-base sm:p-4']"
             @input="validate($event, 'title')"
           >
           <div 
-            class="warning-item" 
+            class="absolute right-[5px] bottom-[-17px] text-[13px] text-red-500" 
             v-show="state.title.currentErr"
           >{{ state.title.currentErr }}</div>
         </div>
-        <div class="description-field field-wrap">
-          <textarea 
-            name="description" 
-            id="description" 
-            rows="10" 
+        <div class="relative">
+          <textarea
+            class="resize-none"
+            name="description"
+            id="description"
+            rows="10"
             placeholder="Описание"
-            :class="`${state.description.currentErr ? 'invalid' : ''} field`"
+            :class="[state.description.currentErr ? 'border border-solid border-red-500' : '', 'w-full text-sm p-2 bg-[#eee] border border-solid border-[#eee] rounded break-words focus:outline-none sm:text-base sm:p-4']"
             @change="validate($event, 'description')"
           ></textarea>
-          <div 
-            class="warning-item" 
+          <div
+            class="absolute right-[5px] bottom-[-17px] text-[13px] text-red-500"
             v-show="state.description.currentErr"
           >{{ state.description.currentErr }}</div>
         </div>
-        <div class="form-item__btn">
-          <button 
+        <div>
+          <button
+            class="py-2 px-2.5 text-sm bg-sky-600 text-white transition-all hover:bg-sky-800 sm:py-2.5 sm:px-[15px] sm:text-base"
             type="submit" 
             @click.prevent="handleForm"
             @submit.prevent="handleForm"
@@ -111,117 +116,4 @@ const handleForm = () => {
 </script>
 
 <style scoped> 
-.form-wrap {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.form-item {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  width: 600px;
-  padding: 30px 40px;
-  background: #ffffff;
-  border-radius: 20px;
-  z-index: 2;
-  transform: scale(0);
-  transition: 0.3s;
-  animation: show-modal 0.3s 1;
-  animation-fill-mode: forwards;
-  animation-delay: 0s;
-}
-
-@keyframes show-modal {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.form-item .close {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 25px;
-  height: 25px;
-  cursor: pointer;
-}
-
-.form-item .close::after,
-.form-item .close::before {
-  content: '';
-  position: absolute;
-  top: 12px;
-  width: 25px;
-  height: 1px;
-  background: #333333;
-  cursor: pointer;
-}
-
-.form-item .close::after {
-  transform: rotate(45deg);
-}
-
-.form-item .close::before {
-  transform: rotate(-45deg);
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.field {
-  width: 100%;
-  font-size: 16px;
-  padding: 16px;
-  background: #eee;
-  border: 1px solid #eee;
-  border-radius: 5px;
-  word-wrap: break-word;
-}
-
-.field:focus {
-  outline: none;
-}
-
-textarea.field {
-  resize: none;
-}
-
-.form-item__btn button {
-  padding: 10px 15px;
-  background: #1000ff;
-  color: #fff;
-  transition: all 0.1s ease;
-}
-
-.form-item__btn button:hover {
-  background: #0b00b2; 
-}
-
-.field-wrap {
-  position: relative;
-}
-
-.field-wrap .invalid {
-  border: 1px solid #F44336;
-}
-
-.warning-item {
-  position: absolute;
-  right: 5px;
-  bottom: -17px;
-  font-size: 13px;
-  color: #F44336;
-}
-
 </style>
