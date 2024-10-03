@@ -1,5 +1,5 @@
 <template>
-  <div class="content flex flex-col grow-0 shrink basis-full sm:min-h-[400px] p-5 sm:p-[30px] bg-[#eeeeee] rounded text-black" v-if="note">
+  <div class="flex flex-col grow-0 shrink basis-full sm:min-h-[400px] p-5 sm:p-[30px] bg-[#eeeeee] rounded text-black" v-if="note">
     <h2 class="text-xl text-sky-600 break-all">{{ note.title }}</h2>
     <p class="break-all text-sm sm:text-base my-5">{{ note.description }}</p>
     <div class="justify-self-start self-end mt-auto">

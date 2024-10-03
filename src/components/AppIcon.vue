@@ -1,6 +1,6 @@
 <template>
   <svg 
-    class="icon" 
+    class="fill-transparent stroke-2" 
     :width="`${iconWidth}px`"
     :height="`${iconHeight}`"
     :stroke="strokeColor"
@@ -21,8 +21,4 @@ defineProps({
 </script>
 
 <style scoped>
-.icon {
-  fill: transparent;
-  stroke-width: 2;
-}
 </style>

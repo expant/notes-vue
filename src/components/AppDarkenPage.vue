@@ -1,5 +1,5 @@
 <template>
-  <div class="darken-page">
+  <div class="fixed top-0 right-0 bottom-0 left-0 bg-black/70 z-10">
     <slot />
   </div>
 </template>
@@ -8,13 +8,4 @@
 </script>
 
 <style scoped>
-.darken-page {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: rgba(51, 51, 51, 0.7);
-  z-index: 1;
-}
 </style>

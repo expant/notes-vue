@@ -8,7 +8,7 @@
       btnType="available"
       @switch-type="switchType"
     ></app-notes-type-btn>
-    <div class="notes-type-btns__new w-full h-9 relative flex gap-[5px] sm:h-11 sm:w-auto">
+    <div class="w-full h-9 relative flex gap-[5px] sm:h-11 sm:w-auto">
       <app-notes-type-btn 
         btnType="new" 
         @clear-err-message="newTypeState.errMessage = ''"
@@ -93,12 +93,6 @@ const switchType = (type) => {
 </script>
 
 <style scoped>
-.notes-type-btns__new .err-message {
-  display: inline-block;
-  font-size: 13px;
-  color: #F44336;
-}
-
 .fade-enter-active,
 .fade-leave-active {
   transition: all 0.2s ease;
@@ -113,20 +107,4 @@ const switchType = (type) => {
 .fade-leave-from {
   opacity: 1;
 }
-
-/* .err-message-appearance-enter-active {
-  animation: err-message 0.3s;
-}
-
-@keyframes err-message {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-} */
 </style>

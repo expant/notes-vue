@@ -1,7 +1,7 @@
 <template>
   <div class="grid grid-cols-1 grid-rows-[60px_auto_auto] sm:grid-rows-[100px_auto_auto] gap-y-6 sm:gap-y-8 min-h-screen">
     <TheHeader />
-    <main class="container flex flex-col max-w-[1280px] my-0 mx-auto px-8">
+    <main class="container flex flex-col max-w-[1280px] my-0 mx-auto px-4 sm:px-8">
       <AppTypes />
       <div class="relative w-full flex items-center mt-5 sm:mt-10" role="search">
         <label
@@ -24,7 +24,7 @@
       </div>
       <div class="flex flex-row flex-wrap gap-[30px] sm:gap-[100px] mt-[10px]">
         <AppNotes />
-        <div class="content">
+        <div class="grow-0 shrink basis-[600px]">
           <h3 class="font-extrabold text-xl text-center sm:text-left sm:text-3xl mb-5 text-sky-600">Содержимое</h3>
           <app-current-note-content
             v-if="notesStore.currentNote.active"
@@ -56,13 +56,4 @@ const notesStore = useNotesStore();
 </script>
 
 <style scoped>
-.content {
-  flex: 0 1 600px;
-}
-
-.add-new-note {
-  padding: 35px 0;
-  vertical-align: middle;
-}
-
 </style>
