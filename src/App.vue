@@ -7,7 +7,7 @@
         <label
           class="absolute left-2.5"
           for="search">
-          <AppIcon
+          <IconSearch
             iconName="search"
             :iconWidth="15"
             :iconHeight="15"
@@ -48,7 +48,7 @@ import AppDarkenPage from './components/AppDarkenPage.vue';
 import AppCurrentNoteContent from './components/AppCurrentNoteContent.vue';
 import { useNotesStore } from './store';
 import TheForm from './components/TheForm.vue';
-import AppIcon from './components/AppIcon.vue';
+import IconSearch from './components/IconSearch.vue';
 import TheHeader from './components/views/TheHeader.vue';
 import TheFooter from './components/views/TheFooter.vue';
 
