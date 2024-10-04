@@ -1,6 +1,6 @@
-# vue-project
-
-This template should help get you started developing with Vue 3 in Vite.
+# List of Notes
+The project "List of Notes" was developed for educational purposes to consolidate the skills and knowledge gained during the study of the Vue framework version 3. 
+In this app, you can create and delete notes and their types as you see fit.
 
 ## Recommended IDE Setup
 
@@ -27,3 +27,6 @@ npm run dev
 ```sh
 npm run build
 ```
+
+### Deploy on Vercel
+[Click](https://notes-list-psi.vercel.app/)
