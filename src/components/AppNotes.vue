@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { useNotesStore } from '@/store';
+import { useNotesStore } from '@/stores/store';
 import { storeToRefs } from 'pinia';
 import AppNotesItem from './AppNotesItem.vue';
 import AppThreeDots from './AppThreeDots.vue';

@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { useNotesStore } from '@/store';
+import { useNotesStore } from '@/stores/store';
 
 const notesStore = useNotesStore();
 

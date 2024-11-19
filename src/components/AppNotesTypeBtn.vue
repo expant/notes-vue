@@ -18,7 +18,7 @@
 
 <script setup>
 import { storeToRefs } from 'pinia';
-import { useNotesStore } from '@/store';
+import { useNotesStore } from '@/stores/store';
 
 const notesStore = useNotesStore();
 const { types } = storeToRefs(notesStore);

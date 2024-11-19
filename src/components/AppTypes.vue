@@ -40,7 +40,7 @@
 
 <script setup>
 import AppNotesTypeBtn from './AppNotesTypeBtn.vue';
-import { useNotesStore } from '@/store';
+import { useNotesStore } from '@/stores/store';
 import { storeToRefs } from 'pinia';
 import { reactive } from 'vue';
 

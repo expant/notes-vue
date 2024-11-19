@@ -46,11 +46,11 @@ import AppTypes from './components/AppTypes.vue';
 import AppNotes from './components/AppNotes.vue';
 import AppDarkenPage from './components/AppDarkenPage.vue';
 import AppCurrentNoteContent from './components/AppCurrentNoteContent.vue';
-import { useNotesStore } from './store';
+import { useNotesStore } from './stores/store';
 import TheForm from './components/TheForm.vue';
 import IconSearch from './components/IconSearch.vue';
-import TheHeader from './components/views/TheHeader.vue';
-import TheFooter from './components/views/TheFooter.vue';
+import TheHeader from './components/TheHeader.vue';
+import TheFooter from './components/TheFooter.vue';
 
 const notesStore = useNotesStore();
 </script>

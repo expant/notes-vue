@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { useNotesStore } from '@/store';
+import { useNotesStore } from '@/stores/store';
 import { computed } from 'vue';
 
 const notesStore = useNotesStore()

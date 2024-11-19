@@ -1,7 +1,10 @@
 <template>
   <div class="flex items-center justify-center w-full h-full">
     <div class="relative flex flex-col gap-[30px] w-[90%] mx-2.5 sm:mx-0 sm:w-[600px] py-5 px-7 sm:py-[30px] sm:px-[40px] bg-white rounded sm:rounded-[20px] z-20 scale-0 duration-300 animate-show-modal">
-      <div class="absolute top-[15px] right-[15px] w-[25px] h-[25px] cursor-pointer" @click="notesStore.form.isVisible = false">
+      <div 
+        class="absolute top-[15px] right-[15px] w-[25px] h-[25px] cursor-pointer" 
+        @click="notesStore.form.isVisible = false"
+      >
         <span class="absolute top-3 w-[25px] h-px bg-black cursor-pointer -rotate-45"></span>
         <span class="absolute top-3 w-[25px] h-px bg-black cursor-pointer rotate-45"></span>
       </div>
@@ -48,7 +51,7 @@
 </template>
 
 <script setup>
-import { useNotesStore } from '@/store';
+import { useNotesStore } from '@/stores/store';
 import { reactive } from 'vue';
 const notesStore = useNotesStore();
 
